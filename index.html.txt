@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LandPrime Style Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Land Prime</div>
+      <ul class="nav-links">
+        <li>Accounts</li>
+        <li>About</li>
+        <li>Trading</li>
+        <li>Platforms</li>
+        <li>Tools</li>
+        <li><button class="login-btn">Login</button></li>
+        <li><button class="open-btn">Open Account</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Trade with a Multi-Award Winning Broker</h1>
+      <p>LAND PRIME has been awarded Best Forex Fintech Broker Global Most Trusted Broker EU and more</p>
+      <div class="buttons">
+        <button class="open-btn">Open Account</button>
+        <button class="see-btn">See our awards</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://dummyimage.com/300x500/333/fff&text=Mobile+Trading" alt="Phone Chart">
+    </div>
+  </section>
+
+  <section class="ticker" id="ticker">
+    <!-- Live Prices will go here -->
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
