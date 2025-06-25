@@ -1,78 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Signup - MyTradingHub</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .signup-container {
-      max-width: 400px;
-      margin: 80px auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0 0 0 0.1);
-    }
-    .signup-container h2 {
-      text-align: center;
-      color: #0055ff;
-    }
-    .signup-container label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    .signup-container input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .signup-container button {
-      width: 100%;
-      margin-top: 20px;
-      background-color: #0077ff;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .signup-container button:hover {
-      background-color: #0055cc;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign Up - MyTradingHub</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    background: #f5f9ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #0d1b37;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .signup-container {
+    background: white;
+    padding: 40px 35px;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+  .signup-container h2 {
+    color: #0055ff;
+    margin-bottom: 30px;
+    font-weight: 700;
+  }
+  form label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  form button {
+    width: 100%;
+    padding: 16px;
+    background: #0055ff;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form button:hover {
+    background: #003bb5;
+  }
+  .login-link {
+    margin-top: 18px;
+    display: block;
+    color: #0055ff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .login-link:hover {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MyTradingHub</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="support.html">Support</a>
-      <a href="faq.html">FAQs</a>
-    </nav>
-  </header>
-
   <div class="signup-container">
-    <h2>Create Account</h2>
+    <h2>Create Your Account</h2>
     <form>
       <label for="fullname">Full Name</label>
       <input type="text" id="fullname" placeholder="Enter your full name" required />
-
-      <label for="email">Email</label>
+      
+      <label for="email">Email Address</label>
       <input type="email" id="email" placeholder="Enter your email" required />
-
+      
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Create a password" required />
-
+      
+      <label for="confirm-password">Confirm Password</label>
+      <input type="password" id="confirm-password" placeholder="Confirm your password" required />
+      
       <button type="submit">Sign Up</button>
     </form>
+    <a href="login.html" class="login-link">Already have an account? Log In</a>
   </div>
 </body>
 </html>
