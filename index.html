@@ -1,707 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TradingHub - Your Trading Platform</title>
-<style>
-  * {
-    margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif;
-  }
-  body {
-    background: linear-gradient(to right, #0077ff, #00c6ff);
-    color: #fff;
-    min-height: 100vh;
-    display: flex; justify-content: center; align-items: center;
-    user-select: none;
-  }
-  #container {
-    background: rgba(0,0,0,0.75);
-    padding: 25px 30px;
-    border-radius: 15px;
-    width: 360px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-  }
-  h1, h2 {
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  h1.logo {
-    font-size: 32px;
-    letter-spacing: 2px;
-  }
-  button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 30px;
-    border: none;
-    background: #00c6ff;
-    color: #003366;
-    font-weight: 700;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    margin-bottom: 15px;
-  }
-  button:hover {
-    background: #0077ff;
-    color: #fff;
-  }
-  .small-link {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #99ddff;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-  }
-  .small-link:hover {
-    text-decoration: underline;
-  }
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-  }
-  input[type="email"],
-  input[type="password"],
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    margin-bottom: 15px;
-    font-size: 16px;
-  }
-  #otpDisplay {
-    background: #0077ff;
-    padding: 8px 14px;
-    border-radius: 12px;
-    font-weight: 900;
-    font-size: 22px;
-    letter-spacing: 6px;
-    text-align: center;
-    margin-bottom: 15px;
-    user-select: all;
-  }
-  #errorMsg, #errorMsgOtp, #errorMsgLogin {
-    background: #ff4444;
-    padding: 8px 14px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    text-align: center;
-    font-weight: 600;
-    display: none;
-  }
-  /* Trading page styles */
-  #tradingPage {
-    display: none;
-    max-width: 1200px;
-    width: 95vw;
-    margin: 20px auto;
-    color: #fff;
-  }
-  #tradingHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  #tradingHeader h1 {
-    font-weight: 700;
-  }
-  #logoutBtn {
-    background: #ff5555;
-    border-radius: 25px;
-    padding: 8px 18px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    color: white;
-    transition: background 0.3s ease;
-  }
-  #logoutBtn:hover {
-    background: #cc0000;
-  }
-  #mainTrading {
-    display: flex;
-    gap: 20px;
-  }
-  #leftPanel {
-    width: 320px;
-    background: rgba(255 255 255 / 0.15);
-    border-radius: 12px;
-    padding: 15px 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  #searchInput {
-    padding: 10px 15px;
-    border-radius: 25px;
-    border: none;
-    font-size: 16px;
-    outline: none;
-    margin-bottom: 12px;
-    color: #003366;
-  }
-  #currencyList {
-    overflow-y: auto;
-    flex: 1;
-  }
-  #currencyList button {
-    background: transparent;
-    border: none;
-    color: #003366;
-    width: 100%;
-    text-align: left;
-    padding: 10px 15px;
-    margin-bottom: 6px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s;
-  }
-  #currencyList button:hover,
-  #currencyList button.active {
-    background: #00c6ff;
-    color: #fff;
-  }
-  #rightPanel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  #pairTitle {
-    font-size: 24px;
-    font-weight: 700;
-    color: white;
-    text-align: center;
-  }
-  #chartContainer {
-    flex: 1;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    min-height: 400px;
-  }
-  #tradeButtons {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-  }
-  #tradeButtons button {
-    flex: 1;
-    background: #0077ff;
-    color: white;
-    font-weight: 700;
-    font-size: 20px;
-    border-radius: 30px;
-    padding: 12px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  #tradeButtons button:hover {
-    background: #004aa3;
-  }
-  /* Homepage styles */
-  #homepage {
-    max-width: 500px;
-    text-align: center;
-    position: relative;
-    color: white;
-  }
-  #homepage h1.logo {
-    text-align: left;
-    font-size: 36px;
-    margin-bottom: 15px;
-    letter-spacing: 3px;
-  }
-  #menuToggle {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    cursor: pointer;
-    font-size: 28px;
-    user-select: none;
-  }
-  #menuDropdown {
-    display: none;
-    position: absolute;
-    top: 45px;
-    right: 15px;
-    background: #0077ff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    z-index: 100;
-  }
-  #menuDropdown a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    display: block;
-    font-weight: 600;
-  }
-  #menuDropdown a:hover {
-    background: #005bb5;
-  }
-  #homepage p.description {
-    font-size: 18px;
-    margin: 25px 0;
-  }
-  #homepage .footer {
-    margin-top: 40px;
-    font-size: 14px;
-    color: #ccc;
-    line-height: 1.5;
-    text-align: left;
-  }
-  #homepage .footer p {
-    margin-bottom: 10px;
-  }
-  /* Responsive */
-  @media (max-width: 960px) {
-    #mainTrading {
-      flex-direction: column;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyTradingHub - Trusted Forex Platform</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif;
     }
-    #leftPanel {
-      width: 100%;
-      max-height: 300px;
+    body {
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: #003366;
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      font-size: 28px;
+      font-weight: 800;
+    }
+    nav a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .hero {
+      background: linear-gradient(to right, #0077ff, #00c6ff);
+      color: white;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .hero h2 {
+      font-size: 36px;
       margin-bottom: 20px;
     }
-    #chartContainer {
-      min-height: 300px;
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 30px;
     }
-  }
-</style>
+    .hero button {
+      padding: 12px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background: white;
+      color: #003366;
+      font-weight: 700;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .section {
+      padding: 60px 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .section h3 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .section p {
+      text-align: center;
+      font-size: 16px;
+      max-width: 800px;
+      margin: auto;
+    }
+    footer {
+      background: #003366;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    footer p {
+      margin: 10px 0;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Homepage -->
-<div id="homepage" role="main" aria-label="Homepage">
-  <h1 class="logo">TradingHub</h1>
-
-  <!-- Menu toggle -->
-  <div id="menuToggle" aria-label="Open menu" role="button" tabindex="0">&#9776;</div>
-  <nav id="menuDropdown" aria-label="Main menu">
-    <a href="mailto:contact@mytradinghub.cloud" target="_blank" rel="noopener noreferrer">Contact Us</a>
-    <a href="#">Customer Support</a>
-    <a href="#">FAQs</a>
-    <a href="#">About Us</a>
+<header>
+  <h1>TradingHub</h1>
+  <nav>
+    <a href="contact.html">Contact</a>
+    <a href="about.html">About</a>
+    <a href="support.html">Support</a>
+    <a href="faq.html">FAQs</a>
+    <a href="#login">Log In</a>
+    <a href="#signup">Open Account</a>
   </nav>
+</header>
 
-  <p class="description">
-    Your live trading platform with real-time currency charts and trading pairs.
-  </p>
-  <button id="btnGoLogin">Log In</button>
-  <button id="btnGoSignup">Sign Up</button>
+<section class="hero">
+  <h2>Trade Smarter with MyTradingHub</h2>
+  <p>Access global currency markets with advanced tools and live charts. Start your journey today with a secure and intuitive trading experience.</p>
+  <button onclick="location.href='#signup'">Open Account</button>
+  <button onclick="location.href='#login'">Log In</button>
+</section>
 
-  <div class="footer" role="contentinfo">
-    <p>SUITE 302 4 STATION SQUARE CAMBRIDGE UNITED KINGDOM CB1 2GE</p>
-    <p>This website is owned and operated by mytradinghub.<br />All contents © 2025 . All rights reserved.</p>
-  </div>
-</div>
+<section class="section">
+  <h3>Trusted Forex Trading Platform</h3>
+  <p>We provide real-time market data, secure transactions, and 24/7 customer support to ensure your trading is always in safe hands. Our mission is to empower traders with transparency and speed.</p>
+</section>
 
-<!-- Auth container -->
-<div id="container" style="display:none;">
+<section class="section">
+  <h3>Live Currency Charts & Market Insights</h3>
+  <p>Coming soon: View all major currency pairs with real-time charts, live price movements, and powerful tools to make informed trading decisions.</p>
+</section>
 
-  <!-- Signup / Login forms container -->
-  <div id="authContainer">
+<footer>
+  <p>SUITE 302 4 STATION SQUARE CAMBRIDGE UNITED KINGDOM CB1 2GE</p>
+  <p>This website is owned and operated by MyTradingHub</p>
+  <p>All contents &copy; 2025 . All rights reserved</p>
+</footer>
 
-    <!-- Signup step 1: Email and password -->
-    <form id="signupForm" aria-label="Signup form">
-      <h2>Sign Up</h2>
-      <label for="signupEmail">Email address</label>
-      <input type="email" id="signupEmail" required autocomplete="email" />
-      <label for="signupPassword">Password</label>
-      <input type="password" id="signupPassword" required autocomplete="new-password" />
-      <label for="signupPasswordConfirm">Confirm Password</label>
-      <input type="password" id="signupPasswordConfirm" required autocomplete="new-password" />
-      <button type="submit">Verify Email</button>
-      <div class="small-link" id="gotoLoginFromSignup">Already have an account? Log In</div>
-      <div id="errorMsg"></div>
-    </form>
-
-    <!-- Signup step 2: OTP verification -->
-    <form id="otpForm" aria-label="OTP verification form" style="display:none;">
-      <h2>Verify OTP</h2>
-      <label for="otpInput">Enter OTP</label>
-      <input type="number" id="otpInput" required minlength="6" maxlength="6" autocomplete="one-time-code" />
-      <div id="otpDisplay" aria-live="polite" aria-label="Your one time password"></div>
-      <button type="submit">Submit OTP</button>
-      <div class="small-link" id="resendOtp">Resend OTP</div>
-      <div id="errorMsgOtp"></div>
-    </form>
-
-    <!-- Login form -->
-    <form id="loginForm" aria-label="Login form" style="display:none;">
-      <h2>Log In</h2>
-      <label for="loginEmail">Email address</label>
-      <input type="email" id="loginEmail" required autocomplete="email" />
-      <label for="loginPassword">Password</label>
-      <input type="password" id="loginPassword" required autocomplete="current-password" />
-      <button type="submit">Log In</button>
-      <div class="small-link" id="gotoSignupFromLogin">Don't have account? Sign Up</div>
-      <div class="small-link" id="forgotPassword">Forgot Password?</div>
-      <div id="errorMsgLogin"></div>
-    </form>
-
-  </div>
-</div>
-
-<!-- Trading page -->
-<div id="tradingPage" role="main" aria-label="Trading dashboard" style="display:none;">
-
-  <div id="tradingHeader">
-    <h1>TradingHub</h1>
-    <button id="logoutBtn" aria-label="Log out">Log Out</button>
-  </div>
-
-  <div id="mainTrading">
-    <div id="leftPanel" role="region" aria-label="Currency pairs and search">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search currency pairs..."
-        aria-label="Search currency pairs"
-        autocomplete="off"
-      />
-      <div id="currencyList" tabindex="0" role="listbox" aria-label="List of currency pairs" aria-live="polite"></div>
-    </div>
-    <div id="rightPanel">
-      <div id="pairTitle" aria-live="polite">Loading chart...</div>
-      <div id="chartContainer" role="region" aria-label="Live trading chart"></div>
-      <div id="tradeButtons">
-        <button id="buyBtn">Buy</button>
-        <button id="sellBtn">Sell</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://unpkg.com/lightweight-charts@3.9.0/dist/lightweight-charts.standalone.production.js"></script>
-<script>
-  // OTP generation helper
-  function generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  }
-
-  // Show/hide error message
-  function showError(id, msg) {
-    const el = document.getElementById(id);
-    if (!msg) {
-      el.style.display = 'none';
-      el.textContent = '';
-    } else {
-      el.style.display = 'block';
-      el.textContent = msg;
-    }
-  }
-
-  // Elements
-  const homepage = document.getElementById('homepage');
-  const btnGoLogin = document.getElementById('btnGoLogin');
-  const btnGoSignup = document.getElementById('btnGoSignup');
-  const container = document.getElementById('container');
-  const signupForm = document.getElementById('signupForm');
-  const otpForm = document.getElementById('otpForm');
-  const loginForm = document.getElementById('loginForm');
-  const authContainer = document.getElementById('authContainer');
-  const otpDisplay = document.getElementById('otpDisplay');
-  const otpInput = document.getElementById('otpInput');
-  const searchInput = document.getElementById('searchInput');
-  const currencyList = document.getElementById('currencyList');
-  const pairTitle = document.getElementById('pairTitle');
-  const tradingPage = document.getElementById('tradingPage');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const buyBtn = document.getElementById('buyBtn');
-  const sellBtn = document.getElementById('sellBtn');
-  const menuToggle = document.getElementById('menuToggle');
-  const menuDropdown = document.getElementById('menuDropdown');
-
-  // Variables to hold state
-  let generatedOtp = null;
-  let userData = {}; // To hold signup data temporarily
-  let allPairs = [
-    { symbol: 'EUR/USD' },
-    { symbol: 'USD/JPY' },
-    { symbol: 'GBP/USD' },
-    { symbol: 'USD/CHF' },
-    { symbol: 'AUD/USD' },
-    { symbol: 'USD/CAD' },
-    { symbol: 'NZD/USD' },
-    { symbol: 'EUR/GBP' },
-    { symbol: 'EUR/JPY' },
-    { symbol: 'GBP/JPY' }
-  ];
-  let chart, lineSeries;
-  let chartInterval = null;
-  let selectedPair = null;
-
-  // Show login form
-  function showLogin() {
-    homepage.style.display = 'none';
-    container.style.display = 'block';
-    signupForm.style.display = 'none';
-    otpForm.style.display = 'none';
-    loginForm.style.display = 'block';
-  }
-  // Show signup form
-  function showSignup() {
-    homepage.style.display = 'none';
-    container.style.display = 'block';
-    signupForm.style.display = 'block';
-    otpForm.style.display = 'none';
-    loginForm.style.display = 'none';
-  }
-  // Show OTP form
-  function showOtpForm() {
-    signupForm.style.display = 'none';
-    otpForm.style.display = 'block';
-    loginForm.style.display = 'none';
-  }
-  // Show trading page
-  function showTrading() {
-    container.style.display = 'none';
-    homepage.style.display = 'none';
-    tradingPage.style.display = 'block';
-  }
-  // Show homepage
-  function showHomepage() {
-    container.style.display = 'none';
-    tradingPage.style.display = 'none';
-    homepage.style.display = 'block';
-  }
-
-  // OTP resend button
-  document.getElementById('resendOtp').onclick = () => {
-    generatedOtp = generateOTP();
-    otpDisplay.textContent = generatedOtp;
-    showError('errorMsgOtp', '');
-  };
-
-  // Navigation links
-  document.getElementById('gotoLoginFromSignup').onclick = showLogin;
-  document.getElementById('gotoSignupFromLogin').onclick = showSignup;
-
-  // Forgot password - just alert for demo
-  document.getElementById('forgotPassword').onclick = () => {
-    alert('Forgot Password feature is not implemented in demo');
-  };
-
-  // Signup form submit: Validate and generate OTP
-  signupForm.addEventListener('submit', e => {
-    e.preventDefault();
-    showError('errorMsg', '');
-
-    const email = signupForm.signupEmail.value.trim();
-    const pass = signupForm.signupPassword.value.trim();
-    const passConfirm = signupForm.signupPasswordConfirm.value.trim();
-
-    if (!email.includes('@')) {
-      showError('errorMsg', 'Please enter a valid email');
-      return;
-    }
-    if (pass.length < 6) {
-      showError('errorMsg', 'Password must be at least 6 characters');
-      return;
-    }
-    if (pass !== passConfirm) {
-      showError('errorMsg', 'Passwords do not match');
-      return;
-    }
-
-    userData.email = email;
-    userData.password = pass;
-
-    // Generate and show OTP
-    generatedOtp = generateOTP();
-    otpDisplay.textContent = generatedOtp;
-
-    showOtpForm();
-  });
-
-  // OTP form submit: Check OTP and move to login form
-  otpForm.addEventListener('submit', e => {
-    e.preventDefault();
-    showError('errorMsgOtp', '');
-
-    if (otpInput.value.trim() === generatedOtp) {
-      alert('Signup verified! Please log in now.');
-      showLogin();
-    } else {
-      showError('errorMsgOtp', 'Incorrect OTP. Please try again.');
-    }
-  });
-
-  // Login form submit: Just basic check for demo
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    showError('errorMsgLogin', '');
-
-    const email = loginForm.loginEmail.value.trim();
-    const pass = loginForm.loginPassword.value.trim();
-
-    if (email !== userData.email || pass !== userData.password) {
-      showError('errorMsgLogin', 'Invalid email or password');
-      return;
-    }
-    // Successful login
-    initChartAndPairs();
-    showTrading();
-  });
-
-  // Logout button
-  logoutBtn.onclick = () => {
-    userData = {};
-    generatedOtp = null;
-    selectedPair = null;
-    if (chartInterval) clearInterval(chartInterval);
-    showHomepage();
-  };
-
-  // Toggle menu dropdown
-  menuToggle.addEventListener('click', () => {
-    menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
-  });
-  document.addEventListener('click', e => {
-    if (!menuToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
-      menuDropdown.style.display = 'none';
-    }
-  });
-
-  // Render currency pairs list
-  function renderPairs(pairs) {
-    currencyList.innerHTML = '';
-    pairs.forEach(pair => {
-      const btn = document.createElement('button');
-      btn.textContent = pair.symbol;
-      btn.setAttribute('role', 'option');
-      btn.onclick = () => {
-        selectedPair = pair.symbol;
-        updateSelectedButton();
-        fetchAndUpdateChart(selectedPair);
-      };
-      if (pair.symbol === selectedPair) btn.classList.add('active');
-      currencyList.appendChild(btn);
-    });
-  }
-
-  // Update selected button highlight
-  function updateSelectedButton() {
-    Array.from(currencyList.children).forEach(btn => {
-      if (btn.textContent === selectedPair) btn.classList.add('active');
-      else btn.classList.remove('active');
-    });
-  }
-
-  // Filter pairs based on search query
-  function filterPairs(query) {
-    if (!query) return allPairs;
-    return allPairs.filter(pair => pair.symbol.toLowerCase().includes(query.toLowerCase()));
-  }
-
-  // Initialize Lightweight Charts
-  function initChart() {
-    if (chart) {
-      chart.remove();
-      chart = null;
-    }
-    const chartContainer = document.getElementById('chartContainer');
-    chartContainer.innerHTML = '';
-    chart = LightweightCharts.createChart(chartContainer, {
-      width: chartContainer.clientWidth,
-      height: chartContainer.clientHeight,
-      layout: {
-        backgroundColor: '#000000',
-        textColor: '#eeeeee',
-      },
-      grid: {
-        vertLines: { color: '#444444' },
-        horzLines: { color: '#444444' },
-      },
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-      },
-    });
-    lineSeries = chart.addLineSeries({
-      color: '#00c6ff',
-      lineWidth: 2,
-    });
-  }
-
-  // Clear chart update interval
-  function clearChartInterval() {
-    if (chartInterval) clearInterval(chartInterval);
-  }
-
-  // Fetch and update chart data with demo random data
-  function fetchAndUpdateChart(symbol) {
-    clearChartInterval();
-
-    const points = [];
-    const now = Math.floor(Date.now() / 1000);
-    let price = 1.0 + Math.random() * 0.5;
-    for (let i = 60; i >= 0; i--) {
-      price += (Math.random() - 0.5) * 0.01;
-      points.push({ time: now - i * 60, value: Number(price.toFixed(4)) });
-    }
-    lineSeries.setData(points);
-    pairTitle.textContent = `${symbol} Live Chart (Demo Data)`;
-
-    chartInterval = setInterval(() => {
-      const last = points[points.length - 1];
-      let newPrice = last.value + (Math.random() - 0.5) * 0.01;
-      newPrice = Number(newPrice.toFixed(4));
-      points.shift();
-      points.push({ time: Math.floor(Date.now() / 1000), value: newPrice });
-      lineSeries.setData(points);
-    }, 60000);
-  }
-
-  // Initialize chart and load pairs after login
-  function initChartAndPairs() {
-    initChart();
-    renderPairs(allPairs);
-    if (allPairs.length > 0) {
-      selectedPair = allPairs[0].symbol;
-      updateSelectedButton();
-      fetchAndUpdateChart(selectedPair);
-    }
-  }
-
-  // Search input event
-  searchInput.addEventListener('input', () => {
-    const filtered = filterPairs(searchInput.value);
-    renderPairs(filtered);
-    if (filtered.length > 0) {
-      selectedPair = filtered[0].symbol;
-      updateSelectedButton();
-      fetchAndUpdateChart(selectedPair);
-    } else {
-      pairTitle.textContent = 'No matching pairs found';
-      if (lineSeries) lineSeries.setData([]);
-    }
-  });
-
-  // Buy/Sell button handlers (demo)
-  buyBtn.addEventListener('click', () => {
-    alert(`Buy order placed for ${selectedPair}`);
-  });
-  sellBtn.addEventListener('click', () => {
-    alert(`Sell order placed for ${selectedPair}`);
-  });
-
-  // Homepage buttons events
-  btnGoLogin.addEventListener('click', showLogin);
-  btnGoSignup.addEventListener('click', showSignup);
-
-  // On page load show homepage
-  showHomepage();
-</script>
 </body>
 </html>
