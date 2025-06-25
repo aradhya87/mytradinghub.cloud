@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MyTradingHub - Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
@@ -52,7 +55,6 @@
   </style>
 </head>
 <body>
-
   <!-- Sidebar with currency pairs -->
   <div class="sidebar p-3">
     <h5>Forex Pairs</h5>
@@ -63,8 +65,8 @@
       <li class="list-group-item" data-symbol="OANDA:BTCUSD">BTCUSD</li>
       <li class="list-group-item" data-symbol="OANDA:ETHUSD">ETHUSD</li>
       <li class="list-group-item" data-symbol="OANDA:USDJPY">USDJPY</li>
-      <li class="list-item list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
-      <li class="list-item list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
+      <li class="list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
     </ul>
   </div>
 
@@ -72,7 +74,12 @@
   <div class="main-content">
     <div class="d-flex justify-content-end">
       <div class="dropdown account-dropdown">
-        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="userInfo">
+        <button
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          id="userInfo"
+        >
           Loading...
         </button>
         <ul class="dropdown-menu">
@@ -85,7 +92,7 @@
           <li><a class="dropdown-item" href="#">Announcement</a></li>
           <li><a class="dropdown-item" href="https://t.me/tradinghub_cloud" target="_blank">Online Service</a></li>
           <li><a class="dropdown-item" href="#">Return Simulated Account</a></li>
-          <li><hr class="dropdown-divider"></li>
+          <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
         </ul>
       </div>
@@ -93,7 +100,13 @@
 
     <!-- Chart Area -->
     <div class="chart-container">
-      <iframe id="chartFrame" src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD" width="100%" height="400" frameborder="0"></iframe>
+      <iframe
+        id="chartFrame"
+        src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD"
+        width="100%"
+        height="400"
+        frameborder="0"
+      ></iframe>
     </div>
 
     <!-- Trade panel -->
@@ -104,19 +117,19 @@
         <div class="row g-3">
           <div class="col-md-3">
             <label>Multiplier</label>
-            <input type="number" class="form-control" value="100">
+            <input type="number" class="form-control" value="100" />
           </div>
           <div class="col-md-3">
             <label>Set Loss</label>
-            <input type="number" class="form-control" value="0">
+            <input type="number" class="form-control" value="0" />
           </div>
           <div class="col-md-3">
             <label>Take Profit</label>
-            <input type="number" class="form-control" value="0">
+            <input type="number" class="form-control" value="0" />
           </div>
           <div class="col-md-3">
             <label>Lots (Step: 0.01)</label>
-            <input type="number" class="form-control" value="1">
+            <input type="number" class="form-control" value="1" />
           </div>
         </div>
         <div class="mt-3 d-flex justify-content-between">
@@ -129,24 +142,45 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    $(document).ready(function() {
-      const email = localStorage.getItem('loggedInUser');
-      const userBalances = JSON.parse(localStorage.getItem('userBalances') || '{}');
+    $(document).ready(function () {
+      const email = localStorage.getItem("loggedInUser");
+      const userBalances = JSON.parse(localStorage.getItem("userBalances") || "{}");
       const balance = userBalances[email] || 0;
-      $('#userInfo').text(`${email} | $${balance}`);
+      $("#userInfo").text(`${email} | $${balance}`);
 
-      $('#pairList li').on('click', function() {
-        const symbol = $(this).data('symbol');
+      let currentPrice = 3329.04; // initial demo price
+      let priceInterval;
+
+      function simulatePriceChange() {
+        // simulate price fluctuation by random +/- 1%
+        const changePercent = (Math.random() * 2 - 1) / 100;
+        currentPrice = (currentPrice * (1 + changePercent)).toFixed(2);
+        $("#marketPrice").text(currentPrice);
+      }
+
+      $("#pairList li").on("click", function () {
+        const symbol = $(this).data("symbol");
         const pair = $(this).text();
-        $('#chartFrame').attr('src', `https://www.tradingview.com/chart/?symbol=${symbol}`);
-        $('#pairTitle').text(pair);
-        $('#marketPrice').text('Loading...');
+        $("#chartFrame").attr("src", `https://www.tradingview.com/chart/?symbol=${symbol}`);
+        $("#pairTitle").text(pair);
+        $("#marketPrice").text("Loading...");
+
+        // reset price simulation
+        clearInterval(priceInterval);
+        currentPrice = 100; // reset to base price for demo
+        setTimeout(() => {
+          $("#marketPrice").text(currentPrice);
+          priceInterval = setInterval(simulatePriceChange, 2000);
+        }, 1000);
       });
+
+      // Start price simulation on page load
+      priceInterval = setInterval(simulatePriceChange, 2000);
     });
 
     function logout() {
-      localStorage.removeItem('loggedInUser');
-      window.location.href = 'login.html';
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "login.html";
     }
   </script>
 </body>
