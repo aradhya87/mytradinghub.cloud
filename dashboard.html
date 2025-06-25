@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard - MyTradingHub</title>
+<link rel="icon" href="favicon.ico" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f9ff;
+    margin: 0;
+    padding: 40px 20px;
+    color: #0d1b37;
+  }
+  .dashboard-container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgba(0 85 255 / 0.2);
+    text-align: center;
+  }
+  h1 {
+    color: #0055ff;
+    margin-bottom: 25px;
+    font-weight: 700;
+  }
+  .btn-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    gap: 15px;
+  }
+  .btn-group button {
+    padding: 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #0055ff;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  .btn-group button:hover {
+    background-color: #003bb5;
+  }
+</style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1>Welcome to Your Dashboard</h1>
+    <div class="btn-group">
+      <button onclick="alert('Deposit clicked')">Deposit</button>
+      <button onclick="alert('Withdrawal clicked')">Withdrawal</button>
+      <button onclick="alert('Wallet clicked')">Wallet</button>
+      <button onclick="window.location.href='verify.html'">Real Name Verification</button>
+      <button onclick="alert('Invite Friends clicked')">Invite Friends</button>
+      <button onclick="alert('Change Password clicked')">Change Password</button>
+      <button onclick="alert('Announcement clicked')">Announcement</button>
+      <button onclick="alert('Online Service clicked')">Online Service</button>
+      <button onclick="window.location.href='login.html'">Logout</button>
+    </div>
+  </div>
+</body>
+</html>
