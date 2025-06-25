@@ -3,51 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Login - MyTradingHub</title>
+  <title>Admin Add Balance</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center" style="height:100vh;">
-  <div class="card p-4" style="width: 320px;">
-    <h3 class="text-center mb-4">Admin Login</h3>
-    <form id="adminLoginForm">
-      <div class="mb-3">
-        <label for="adminId" class="form-label">Admin ID</label>
-        <input type="text" id="adminId" class="form-control" required placeholder="Enter Admin ID" />
-      </div>
-      <div class="mb-3">
-        <label for="adminPassword" class="form-label">Password</label>
-        <input type="password" id="adminPassword" class="form-control" required placeholder="Enter Password" />
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Login</button>
-      <div id="errorMsg" class="text-danger mt-2" style="display:none;">Invalid credentials</div>
-    </form>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center">Admin Add Balance</h2>
+    <div class="card mt-4 p-4">
+      <table class="table table-bordered bg-white">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Current Balance ($)</th>
+            <th>Add Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="clientsTable">
+          <!-- User rows will be dynamically generated here -->
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center mt-4">
+      <a href="dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
   </div>
 
   <script>
-    const adminLoginForm = document.getElementById('adminLoginForm');
-    const errorMsg = document.getElementById('errorMsg');
+    function loadClients() {
+      const balances = JSON.parse(localStorage.getItem('balances') || '{}');
+      const table = document.getElementById('clientsTable');
+      table.innerHTML = '';
 
-    const ADMIN_ID = 'admin';
-    const ADMIN_PASS = 'queen1234';
+      Object.keys(balances).forEach(email => {
+        const tr = document.createElement('tr');
 
-    adminLoginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const id = document.getElementById('adminId').value.trim();
-      const pass = document.getElementById('adminPassword').value.trim();
+        const emailTd = document.createElement('td');
+        emailTd.textContent = email;
 
-      if (id === ADMIN_ID && pass === ADMIN_PASS) {
-        // Save login status
-        localStorage.setItem('isAdminLoggedIn', 'true');
-        // Redirect to admin users page
-        window.location.href = 'admin-users.html';
-      } else {
-        errorMsg.style.display = 'block';
-      }
-    });
+        const balanceTd = document.createElement('td');
+        balanceTd.textContent = balances[email].toFixed(2);
 
-    // If already logged in redirect automatically
-    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-      window.location.href = 'admin-users.html';
+        const inputTd = document.createElement('td');
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '1';
+        input.className = 'form-control';
+        input.placeholder = 'Amount';
+        inputTd.appendChild(input);
+
+        const actionTd = document.createElement('td');
+        const addButton = document.createElement('button');
+        addButton.className = 'btn btn-success';
+        addButton.textContent = 'Add Money';
+        addButton.onclick = () => {
+          const amount = parseFloat(input.value);
+          if (!isNaN(amount) && amount > 0) {
+            balances[email] += amount;
+            localStorage.setItem('balances', JSON.stringify(balances));
+            alert(`$${amount.toFixed(2)} added to ${email}`);
+            loadClients();
+          } else {
+            alert('Please enter a valid amount');
+          }
+        };
+        actionTd.appendChild(addButton);
+
+        tr.appendChild(emailTd);
+        tr.appendChild(balanceTd);
+        tr.appendChild(inputTd);
+        tr.appendChild(actionTd);
+
+        table.appendChild(tr);
+      });
+    }
+
+    // Protect the page with admin login check
+    if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+      alert('Access denied! Please login as admin.');
+      window.location.href = 'admin-login.html';
+    } else {
+      loadClients();
     }
   </script>
 </body>
