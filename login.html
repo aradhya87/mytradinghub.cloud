@@ -1,23 +1,95 @@
-<script>
-  document.getElementById('login-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-
-    const savedEmail = localStorage.getItem('userEmail');
-    const savedPassword = localStorage.getItem('userPassword');
-
-    if (!savedEmail || !savedPassword) {
-      alert('No registered user found. Please sign up first.');
-      return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
-
-    if (email === savedEmail && password === savedPassword) {
-      alert('Login successful');
-      window.location.href = 'dashboard.html';
-    } else {
-      alert('Incorrect email or password');
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0 85 255 / 0.2);
+      width: 100%;
+      max-width: 400px;
     }
-  });
-</script>
+    h2 {
+      text-align: center;
+      color: #0055ff;
+      margin-bottom: 24px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 12px;
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #0055ff;
+      color: white;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" required />
+
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      const savedEmail = localStorage.getItem('userEmail');
+      const savedPassword = localStorage.getItem('userPassword');
+
+      if (!savedEmail || !savedPassword) {
+        alert('No registered user found. Please sign up first.');
+        return;
+      }
+
+      if (email === savedEmail && password === savedPassword) {
+        alert('Login successful');
+        window.location.href = 'dashboard.html';
+      } else {
+        alert('Incorrect email or password');
+      }
+    });
+  </script>
+</body>
+</html>
