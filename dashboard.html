@@ -23,7 +23,13 @@
     }
     .sidebar h2 {
       color: #ffc107;
+      margin-bottom: 10px;
+    }
+    .sidebar .user-info {
       margin-bottom: 20px;
+    }
+    .sidebar .user-info p {
+      margin: 5px 0;
     }
     .sidebar input {
       width: 100%;
@@ -105,6 +111,10 @@
 <body>
   <div class="sidebar">
     <h2>TradingHub</h2>
+    <div class="user-info">
+      <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+      <p><strong>Balance:</strong> $<span id="userBalance">10000.00</span></p>
+    </div>
     <input type="text" id="search" placeholder="Search pairs..." oninput="filterPairs()">
     <div class="pair-list" id="pairList">
       <button onclick="loadChart('BTCUSD')">BTCUSD</button>
@@ -144,7 +154,7 @@
 
     <div class="history">
       <h4>Past 7 Days History</h4>
-      <ul>
+      <ul id="tradeHistory">
         <li>Buy BTCUSD - Profit: +5%</li>
         <li>Sell ETHUSD - Loss: -2%</li>
         <li>Buy EURUSD - Profit: +3%</li>
@@ -155,6 +165,7 @@
 
   <script>
     let currentPair = 'BTCUSD';
+    let userBalance = parseFloat(localStorage.getItem('userBalance')) || 10000;
     const chart = new Chart(document.getElementById('chart'), {
       type: 'line',
       data: {
@@ -176,13 +187,21 @@
     }
 
     function trade(type) {
-      const lots = document.getElementById('lots').value;
+      const lots = parseFloat(document.getElementById('lots').value);
       if (!lots || lots <= 0) {
         alert('Enter valid lot size');
         return;
       }
-      const result = (Math.random() * 2 - 1).toFixed(2);
-      document.getElementById('result').textContent = `${type.toUpperCase()} ${currentPair} → Margin: ${result}%`;
+      const margin = ((Math.random() * 2 - 1) * lots * 10).toFixed(2);
+      userBalance += parseFloat(margin);
+      localStorage.setItem('userBalance', userBalance.toFixed(2));
+      document.getElementById('userBalance').textContent = userBalance.toFixed(2);
+      const resultText = `${type.toUpperCase()} ${currentPair} → Margin: ${margin > 0 ? '+' : ''}${margin}`;
+      document.getElementById('result').textContent = resultText;
+
+      const li = document.createElement('li');
+      li.textContent = resultText;
+      document.getElementById('tradeHistory').prepend(li);
     }
 
     function filterPairs() {
@@ -197,6 +216,10 @@
       const drop = document.getElementById('dropdown');
       drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
     }
+
+    // Set user email and balance
+    document.getElementById('userEmail').textContent = localStorage.getItem('userEmail') || 'guest@trade.com';
+    document.getElementById('userBalance').textContent = userBalance.toFixed(2);
   </script>
 </body>
 </html>
