@@ -1,172 +1,276 @@
-/* style.css */
-
+/* Reset and base */
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f8fc;
-  color: #1c1c1c;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f9ff;
+  color: #0d1b37;
+  min-height: 100vh;
 }
-
-.header {
-  background-color: #0055ff;
-  color: white;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.nav a {
-  color: white;
+/* Links */
+a {
   text-decoration: none;
-  margin-left: 20px;
-  font-weight: 500;
+  color: inherit;
 }
-
-.nav a:hover {
-  text-decoration: underline;
-}
-
-.main-container {
+/* Header */
+header {
+  background: #0055ff;
+  color: white;
+  padding: 12px 20px;
   display: flex;
-  height: calc(100vh - 70px);
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
-
-.sidebar {
-  background-color: #fff;
-  border-right: 1px solid #ccc;
-  width: 220px;
-  padding: 20px;
+.logo {
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
 }
-
-.sidebar h3 {
-  margin-top: 0;
+nav {
+  display: flex;
+  gap: 18px;
+}
+nav a {
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  color: white;
+}
+nav a:hover, nav a.active {
+  background: #ffd600;
   color: #0055ff;
 }
-
+/* Buttons in header */
+.header-buttons {
+  display: flex;
+  gap: 12px;
+}
+.header-buttons button {
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+.header-buttons .login {
+  background: #ffd600;
+  color: #0055ff;
+}
+.header-buttons .login:hover {
+  background: #cca800;
+}
+.header-buttons .open-account {
+  background: #0055ff;
+  color: white;
+}
+.header-buttons .open-account:hover {
+  background: #003bb5;
+}
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #e6f0ff;
+  border-right: 2px solid #0055ff;
+  padding: 15px 10px;
+  overflow-y: auto;
+}
+.sidebar h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #0039cc;
+  font-weight: 700;
+}
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
-
-.sidebar li {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+.sidebar ul li {
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background: white;
+  color: #0039cc;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
-
-.sidebar li:hover {
-  color: #f7b801;
+.sidebar ul li:hover,
+.sidebar ul li.active {
+  background: #0055ff;
+  color: white;
 }
-
-.chart-area {
+/* Content */
+.content {
   flex: 1;
-  padding: 20px;
-  background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  padding: 15px 20px;
+  overflow-y: auto;
 }
-
-.currency-info h2 {
+.currency-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.currency-header h1 {
   margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
   color: #0055ff;
 }
-
-.chart-box iframe {
-  width: 100%;
-  height: 400px;
-  border: none;
+.currency-header .price,
+.currency-header .change {
+  font-weight: 700;
+  font-size: 1.1rem;
 }
-
+.currency-header .price {
+  color: #333;
+}
+.currency-header .change.positive {
+  color: #28a745;
+}
+.currency-header .change.negative {
+  color: #dc3545;
+}
+/* Chart */
+.chart-container {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+iframe {
+  border: none;
+  width: 100%;
+  height: 450px;
+}
+/* Trade Buttons */
 .trade-buttons {
   display: flex;
-  gap: 20px;
+  gap: 14px;
+  justify-content: center;
 }
-
 .trade-buttons button {
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+  flex: 1;
+  padding: 16px 0;
+  font-weight: 700;
+  font-size: 1.2rem;
   border: none;
-  border-radius: 6px;
-  transition: 0.3s;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-
-.trade-buttons button:first-child {
-  background-color: #0077ff;
+.trade-buttons button.buy {
+  background: #0055ff;
   color: white;
 }
-
-.trade-buttons button:last-child {
-  background-color: #ffcc00;
-  color: #1c1c1c;
+.trade-buttons button.buy:hover {
+  background: #003bb5;
 }
-
-.trade-buttons button:hover {
-  opacity: 0.9;
+.trade-buttons button.sell {
+  background: #ffd600;
+  color: #0055ff;
 }
-
+.trade-buttons button.sell:hover {
+  background: #cca800;
+}
+/* Modal */
 .modal {
+  display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0 0 0 0.5);
-  display: flex;
-  align-items: center;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0 0 0 / 0.5);
   justify-content: center;
-  z-index: 999;
+  align-items: center;
+  z-index: 1000;
 }
-
+.modal.show {
+  display: flex;
+}
 .modal-content {
-  background-color: white;
+  background: white;
   padding: 30px;
-  border-radius: 10px;
-  width: 300px;
-  box-shadow: 0 0 10px rgba(0 0 0 0.3);
-  text-align: center;
+  border-radius: 14px;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgb(0 85 255 / 0.25);
+  position: relative;
 }
-
+.modal-content h2 {
+  margin-top: 0;
+  color: #0055ff;
+}
 .modal-content label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin: 15px 0 6px;
+  font-weight: 600;
 }
-
-.modal-content input {
-  padding: 8px;
+.modal-content input[type="number"] {
   width: 100%;
-  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  border-radius: 5px;
 }
-
-.modal-content button {
-  padding: 10px 20px;
-  background-color: #0077ff;
-  color: white;
+.modal-content button.confirm {
+  margin-top: 20px;
+  width: 100%;
+  background: #0055ff;
   border: none;
-  border-radius: 5px;
-  font-weight: bold;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 14px 0;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-
-.close {
+.modal-content button.confirm:hover {
+  background: #003bb5;
+}
+.modal-content .close-btn {
   position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 24px;
+  top: 12px;
+  right: 16px;
+  font-size: 26px;
+  color: #0055ff;
   cursor: pointer;
 }
-
-.hidden {
-  display: none;
+/* Footer instructions styling used on home page */
+.instructions {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 25px;
+  box-shadow: 0 3px 15px rgb(0 85 255 / 0.1);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #0d1b37;
+}
+/* Responsive */
+@media (max-width: 900px) {
+  .main {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #0055ff;
+    padding-bottom: 10px;
+  }
+  .content {
+    padding: 10px 10px 30px;
+  }
+  .chart-container iframe {
+    height: 320px;
+  }
 }
