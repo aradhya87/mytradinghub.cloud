@@ -33,11 +33,12 @@
       right: 0;
       left: auto;
     }
-    .trade-panel {
+    .trade-panel, .position-panel {
       background: white;
       border-radius: 8px;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
     .chart-container {
       background: white;
@@ -48,6 +49,10 @@
     }
     .list-group-item {
       cursor: pointer;
+    }
+    table th, table td {
+      font-size: 14px;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -126,12 +131,57 @@
         </div>
       </form>
     </div>
+
+    <!-- Position Table -->
+    <div class="position-panel">
+      <h5>Open Positions</h5>
+      <p><strong>Profit and Loss:</strong> 71.4</p>
+      <p><strong>Current Margin:</strong> 8488.542</p>
+      <p><strong>Risk Rate:</strong> 1178.799745%</p>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Transaction Pair</th>
+              <th>Reservation #</th>
+              <th>Direction</th>
+              <th>Lots</th>
+              <th>Lower Unit Price</th>
+              <th>Current Price</th>
+              <th>Take Profit</th>
+              <th>Set Loss</th>
+              <th>Handling Fee</th>
+              <th>Margin</th>
+              <th>Profit</th>
+              <th>Open Time</th>
+              <th>Operation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>XAUUSD</td>
+              <td>#19891</td>
+              <td>Buy</td>
+              <td>255</td>
+              <td>3328.84</td>
+              <td>3329.12</td>
+              <td>0</td>
+              <td>0</td>
+              <td>8.488542</td>
+              <td>8488.542</td>
+              <td>71.4</td>
+              <td>2025-06-25 18:17:47</td>
+              <td><button class="btn btn-sm btn-secondary">TP/SL</button> <button class="btn btn-sm btn-danger">Close</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     $(document).ready(function() {
-      // Get user email and balance from localStorage
       const email = localStorage.getItem("userEmail") || "guest@trade.com";
       const balance = localStorage.getItem("userBalance") || "10000.00";
       $('#userDropdown').html(`${email} | $<span id="userBalance">${balance}</span>`);
