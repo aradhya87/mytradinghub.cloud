@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deposit - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background-color: #f5f9ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .deposit-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0, 85, 255, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      color: #0055ff;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 25px;
+      background: #0055ff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="deposit-container">
+    <h2>Deposit Funds</h2>
+    <form onsubmit="submitDeposit(event)">
+      <label for="amount">Deposit Amount</label>
+      <input type="number" id="amount" placeholder="Enter amount" required />
+
+      <label for="currency">Select Currency</label>
+      <select id="currency" required>
+        <option value="">-- Select --</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="BTC">BTC</option>
+        <option value="ETH">ETH</option>
+      </select>
+
+      <label for="method">Payment Method</label>
+      <select id="method" required>
+        <option value="">-- Select --</option>
+        <option value="bank">Bank Transfer</option>
+        <option value="upi">UPI</option>
+        <option value="crypto">Crypto Wallet</option>
+      </select>
+
+      <button type="submit">Proceed to Deposit</button>
+      <p class="note">* Minimum deposit amount is 10 USD equivalent.</p>
+    </form>
+  </div>
+
+  <script>
+    function submitDeposit(event) {
+      event.preventDefault();
+      const amount = document.getElementById('amount').value;
+      const currency = document.getElementById('currency').value;
+      const method = document.getElementById('method').value;
+
+      if (!amount || !currency || !method) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      alert(`Deposit request submitted:\nAmount: ${amount} ${currency}\nMethod: ${method}`);
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>
