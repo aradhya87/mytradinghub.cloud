@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyTradingHub - Home</title>
+  <title>MyTradingHub - Live Forex Trading</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -15,9 +15,9 @@
     body {
       background: linear-gradient(to right, #0077ff, #00c6ff);
       color: white;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
     header {
       padding: 20px;
@@ -62,25 +62,26 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      text-align: center;
-      padding: 40px 20px 80px;
+      padding: 20px;
+      gap: 20px;
     }
     h1 {
       font-size: 36px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+      text-align: center;
     }
     p {
       font-size: 18px;
-      margin-bottom: 40px;
       max-width: 450px;
+      text-align: center;
+      margin-bottom: 20px;
     }
     .btn-group {
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
     .btn {
       background-color: white;
@@ -90,13 +91,26 @@
       font-weight: bold;
       text-decoration: none;
       transition: 0.3s ease;
+      user-select: none;
     }
     .btn:hover {
       background-color: #f0f0f0;
     }
+    /* Search input */
+    #searchInput {
+      width: 320px;
+      max-width: 90vw;
+      padding: 10px 15px;
+      border-radius: 25px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 0 8px rgba(255 255 255 / 0.6);
+      user-select: text;
+    }
     /* Currency table */
     #currencyTable {
-      width: 320px;
+      width: 350px;
       max-width: 90vw;
       background: rgba(255 255 255 / 0.15);
       border-radius: 10px;
@@ -114,20 +128,24 @@
       padding: 12px 15px;
       text-align: center;
     }
+    #currencyTable tbody tr {
+      cursor: pointer;
+    }
     #currencyTable tbody tr:nth-child(even) {
       background: rgba(255 255 255 / 0.1);
     }
     #currencyTable tbody tr:hover {
       background: rgba(255 255 255 / 0.3);
-      cursor: default;
     }
-    .price-up {
-      color: #0f0;
-      font-weight: 700;
-    }
-    .price-down {
-      color: #f33;
-      font-weight: 700;
+    /* Chart container */
+    #chartContainer {
+      width: 100%;
+      max-width: 900px;
+      height: 400px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      user-select: none;
     }
     @media (max-width: 768px) {
       .btn-group {
@@ -136,6 +154,12 @@
       }
       #currencyTable {
         width: 100%;
+      }
+      #searchInput {
+        width: 100%;
+      }
+      #chartContainer {
+        height: 300px;
       }
     }
   </style>
@@ -169,6 +193,13 @@
     <a href="#" class="btn">Contact Us</a>
   </div>
 
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search currency pairs..."
+    aria-label="Search currency pairs"
+  />
+
   <table id="currencyTable" aria-label="Live Currency Pairs">
     <thead>
       <tr>
@@ -177,10 +208,15 @@
       </tr>
     </thead>
     <tbody id="currencyBody">
-      <!-- Dynamic rows here -->
+      <!-- Currency rows inserted here -->
     </tbody>
   </table>
+
+  <div id="chartContainer"></div>
 </main>
+
+<!-- TradingView Lightweight Charts library -->
+<script src="https://unpkg.com/lightweight-charts@3.9.0/dist/lightweight-charts.standalone.production.js"></script>
 
 <script>
   function toggleMenu() {
@@ -188,41 +224,181 @@
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
   }
 
-  const pairs = ['EUR/USD', 'USD/JPY', 'GBP/USD', 'AUD/USD', 'USD/CAD', 'USD/CHF', 'NZD/USD'];
-  const tbody = document.getElementById('currencyBody');
-  const apiKey = 'a58af8d2469c4c63a44dc133a2c28481'; // Your actual TwelveData API key
+  const apiKey = 'a58af8d2469c4c63a44dc133a2c28481'; // Your API key
 
+  const pairs = [
+    { symbol: 'EUR/USD', code: 'EURUSD' },
+    { symbol: 'USD/JPY', code: 'USDJPY' },
+    { symbol: 'GBP/USD', code: 'GBPUSD' },
+    { symbol: 'AUD/USD', code: 'AUDUSD' },
+    { symbol: 'USD/CAD', code: 'USDCAD' },
+    { symbol: 'USD/CHF', code: 'USDCHF' },
+    { symbol: 'NZD/USD', code: 'NZDUSD' },
+  ];
+
+  const tbody = document.getElementById('currencyBody');
+  let chart = null;
+  let lineSeries = null;
+  let chartInterval = null;
+  let selectedPairCode = pairs[0].code; // Default selected pair
+
+  // Create table rows and add click listeners
+  function renderRows(filter = '') {
+    tbody.innerHTML = '';
+    const filteredPairs = pairs.filter(p => p.symbol.toLowerCase().includes(filter.toLowerCase()) || p.code.toLowerCase().includes(filter.toLowerCase()));
+    filteredPairs.forEach(pair => {
+      const row = document.createElement('tr');
+      row.id = `row-${pair.code}`;
+      row.innerHTML = `<td>${pair.symbol}</td><td class="price" id="price-${pair.code}">Loading...</td>`;
+      row.addEventListener('click', () => {
+        if (selectedPairCode !== pair.code) {
+          selectedPairCode = pair.code;
+          updateChart(pair.code);
+          highlightSelectedRow(pair.code);
+        }
+      });
+      tbody.appendChild(row);
+    });
+  }
+
+  function highlightSelectedRow(code) {
+    pairs.forEach(pair => {
+      const row = document.getElementById(`row-${pair.code}`);
+      if (row) {
+        if (pair.code === code) {
+          row.style.backgroundColor = 'rgba(255 255 255 / 0.3)';
+          row.style.fontWeight = '700';
+        } else {
+          row.style.backgroundColor = '';
+          row.style.fontWeight = '';
+        }
+      }
+    });
+  }
+
+  // Fetch current prices every 10 seconds
   function fetchPrices() {
     pairs.forEach(pair => {
-      const symbol = pair.replace('/', '');
-      fetch(`https://api.twelvedata.com/price?symbol=${symbol}&apikey=${apiKey}`)
+      fetch(`https://api.twelvedata.com/price?symbol=${pair.code}&apikey=${apiKey}`)
         .then(res => res.json())
         .then(data => {
           if (data.price) {
-            const priceNum = parseFloat(data.price).toFixed(5);
-            let row = document.getElementById(`row-${symbol}`);
-            if (!row) {
-              row = document.createElement('tr');
-              row.id = `row-${symbol}`;
-              row.innerHTML = `
-                <td>${pair}</td>
-                <td class="price">${priceNum}</td>
-              `;
-              tbody.appendChild(row);
-            } else {
-              row.querySelector('.price').textContent = priceNum;
-            }
+            const priceEl = document.getElementById(`price-${pair.code}`);
+            if (priceEl) priceEl.textContent = parseFloat(data.price).toFixed(5);
           }
         })
         .catch(() => {
-          // Handle errors silently
+          // ignore errors silently
         });
     });
   }
 
-  // Initial fetch and every 10 seconds update
+  // Initialize chart with Lightweight Charts
+  function initChart() {
+    const chartContainer = document.getElementById('chartContainer');
+    chartContainer.innerHTML = ''; // Clear old chart if any
+
+    chart = LightweightCharts.createChart(chartContainer, {
+      width: chartContainer.clientWidth,
+      height: chartContainer.clientHeight,
+      layout: {
+        backgroundColor: '#ffffff',
+        textColor: '#000000',
+      },
+      grid: {
+        vertLines: {
+          color: '#eee',
+        },
+        horzLines: {
+          color: '#eee',
+        },
+      },
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+      },
+    });
+
+    lineSeries = chart.addLineSeries({
+      color: '#0077ff',
+      lineWidth: 2,
+    });
+  }
+
+  // Fetch historical data and update chart
+  function updateChart(pairCode) {
+    if (chartInterval) clearInterval(chartInterval);
+
+    // TwelveData endpoint for 1min candles for last 100 points
+    const url = `https://api.twelvedata.com/time_series?symbol=${pairCode}&interval=1min&outputsize=100&apikey=${apiKey}`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (data.values) {
+          const candlesticks = data.values
+            .map(candle => ({
+              time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+              value: parseFloat(candle.close),
+            }))
+            .reverse();
+
+          lineSeries.setData(candlesticks);
+        }
+      })
+      .catch(() => {
+        lineSeries.setData([]);
+      });
+
+    // Update chart data every 60 seconds
+    chartInterval = setInterval(() => {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.values) {
+            const candlesticks = data.values
+              .map(candle => ({
+                time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+                value: parseFloat(candle.close),
+              }))
+              .reverse();
+
+            lineSeries.setData(candlesticks);
+          }
+        })
+        .catch(() => {
+          lineSeries.setData([]);
+        });
+    }, 60000);
+  }
+
+  // Resize chart on window resize
+  window.addEventListener('resize', () => {
+    if (chart) {
+      const chartContainer = document.getElementById('chartContainer');
+      chart.applyOptions({ width: chartContainer.clientWidth });
+    }
+  });
+
+  // Search input event
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    renderRows(e.target.value);
+    // If current selected pair is filtered out, select first visible pair
+    const visiblePairs = pairs.filter(p => p.symbol.toLowerCase().includes(e.target.value.toLowerCase()) || p.code.toLowerCase().includes(e.target.value.toLowerCase()));
+    if (!visiblePairs.some(p => p.code === selectedPairCode) && visiblePairs.length > 0) {
+      selectedPairCode = visiblePairs[0].code;
+      updateChart(selectedPairCode);
+      highlightSelectedRow(selectedPairCode);
+    }
+  });
+
+  // Initial setup
+  renderRows();
   fetchPrices();
   setInterval(fetchPrices, 10000);
+  initChart();
+  updateChart(selectedPairCode);
+  highlightSelectedRow(selectedPairCode);
 </script>
 
 </body>
