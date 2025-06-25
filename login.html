@@ -2,73 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - MyTradingHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Log In - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      background: #f5f9ff; color: #0d1b37; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+    }
     .login-container {
-      max-width: 400px;
-      margin: 80px auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0 0 0 0.1);
+      background: white; padding: 40px 30px; border-radius: 12px;
+      box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
+      max-width: 400px; width: 100%;
+      text-align: center;
     }
     .login-container h2 {
-      text-align: center;
-      color: #0055ff;
+      color: #0055ff; margin-bottom: 25px; font-weight: 700;
     }
     .login-container label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
+      display: block; text-align: left; font-weight: 600;
+      margin-bottom: 6px;
     }
     .login-container input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #ccc;
+      font-size: 1rem;
     }
     .login-container button {
-      width: 100%;
-      margin-top: 20px;
-      background-color: #0077ff;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      width: 100%; padding: 14px; background: #0055ff; border: none; color: white;
+      font-weight: 700; font-size: 1.2rem; border-radius: 8px; cursor: pointer;
+      transition: background-color 0.3s ease;
     }
     .login-container button:hover {
-      background-color: #0055cc;
+      background: #003bb5;
+    }
+    .login-container .signup-link {
+      margin-top: 15px;
+      display: block;
+      color: #0055ff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .login-container .signup-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MyTradingHub</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="support.html">Support</a>
-      <a href="faq.html">FAQs</a>
-    </nav>
-  </header>
-
   <div class="login-container">
-    <h2>Login to Your Account</h2>
+    <h2>Log In</h2>
     <form>
-      <label for="email">Email</label>
+      <label for="email">Email Address</label>
       <input type="email" id="email" placeholder="Enter your email" required />
-
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Enter your password" required />
-
       <button type="submit">Log In</button>
     </form>
+    <a href="signup.html" class="signup-link">Don't have an account? Sign Up</a>
   </div>
 </body>
 </html>
