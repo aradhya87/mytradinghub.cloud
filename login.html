@@ -1,90 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Login - MyTradingHub</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="style.css" />
-<style>
-  body {
-    background: #f5f9ff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #0d1b37;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  .login-container {
-    background: white;
-    padding: 40px 35px;
-    border-radius: 14px;
-    box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
-    max-width: 420px;
-    width: 100%;
-    text-align: center;
-  }
-  .login-container h2 {
-    color: #0055ff;
-    margin-bottom: 30px;
-    font-weight: 700;
-  }
-  form label {
-    display: block;
-    text-align: left;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  form input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-  }
-  form button {
-    width: 100%;
-    padding: 16px;
-    background: #0055ff;
-    border: none;
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  form button:hover {
-    background: #003bb5;
-  }
-  .signup-link {
-    margin-top: 18px;
-    display: block;
-    color: #0055ff;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .signup-link:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #0d1b37;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .login-container {
+      background: white;
+      padding: 40px 35px;
+      border-radius: 14px;
+      box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .login-container h2 {
+      color: #0055ff;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+    form label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    form button {
+      width: 100%;
+      padding: 16px;
+      background: #0055ff;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background: #003bb5;
+    }
+    .signup-link {
+      margin-top: 18px;
+      display: block;
+      color: #0055ff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .signup-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <div class="login-container">
     <h2>Log In to Your Account</h2>
-    <form>
+    <form id="login-form">
       <label for="email">Email Address</label>
       <input type="email" id="email" placeholder="Enter your email" required />
-      
+
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Enter your password" required />
-      
+
       <button type="submit">Log In</button>
     </form>
     <a href="signup.html" class="signup-link">Don't have an account? Sign Up</a>
   </div>
+
+  <script>
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // basic login condition (can replace with backend later)
+      const correctEmail = "test@mytradinghub.cloud";
+      const correctPassword = "password123";
+
+      if (email === correctEmail && password === correctPassword) {
+        alert("Login Successful");
+        window.location.href = "trade.html";
+      } else {
+        alert("Incorrect email or password");
+      }
+    });
+  </script>
 </body>
 </html>
