@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - MyTradingHub</title>
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
@@ -22,7 +22,7 @@
       border-radius: 12px;
       box-shadow: 0 3px 12px rgba(0 85 255 / 0.2);
       width: 100%;
-      max-width: 480px;
+      max-width: 400px;
     }
     h2 {
       text-align: center;
@@ -31,13 +31,13 @@
     }
     label {
       font-weight: 600;
-      margin-top: 10px;
+      margin-top: 12px;
       display: block;
     }
     input {
       width: 100%;
       padding: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
@@ -57,11 +57,8 @@
       margin-top: 20px;
     }
     #otp-display {
+      margin-bottom: 10px;
       font-weight: bold;
-      font-size: 1.5rem;
-      text-align: center;
-      margin: 10px 0;
-      color: #0b8f0b;
     }
   </style>
 </head>
@@ -69,66 +66,63 @@
   <div class="signup-container">
     <h2>Create Account</h2>
     <form id="signup-form">
-      <label>Full Name</label>
+      <label for="fullname">Full Name</label>
       <input type="text" id="fullname" required />
 
-      <label>Email Address</label>
+      <label for="email">Email Address</label>
       <input type="email" id="email" required />
 
-      <label>Password</label>
+      <label for="password">Password</label>
       <input type="password" id="password" required />
 
-      <label>Confirm Password</label>
+      <label for="confirm-password">Confirm Password</label>
       <input type="password" id="confirm-password" required />
 
       <button type="button" onclick="generateOTP()">Verify</button>
 
       <div id="otp-section">
-        <div id="otp-display"></div>
-        <label>Enter OTP</label>
-        <input type="text" id="otp-input" />
+        <p id="otp-display"></p>
+        <input type="text" id="otp-input" placeholder="Enter OTP" />
         <button type="button" onclick="validateOTP()">Submit OTP</button>
       </div>
     </form>
   </div>
 
   <script>
-    <script>
-  <script>
-  let generatedOTP = "";
+    let generatedOTP = "";
 
-  function generateOTP() {
-    const name = document.getElementById("fullname").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("password").value;
-    const confirmPass = document.getElementById("confirm-password").value;
+    function generateOTP() {
+      const name = document.getElementById("fullname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value;
+      const confirmPass = document.getElementById("confirm-password").value;
 
-    if (!name || !email || !pass || !confirmPass) {
-      alert("Please fill all fields");
-      return;
+      if (!name || !email || !pass || !confirmPass) {
+        alert("Please fill all fields");
+        return;
+      }
+      if (pass !== confirmPass) {
+        alert("Passwords do not match");
+        return;
+      }
+
+      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      document.getElementById("otp-display").textContent = "OTP: " + generatedOTP;
+      document.getElementById("otp-section").style.display = "block";
     }
-    if (pass !== confirmPass) {
-      alert("Passwords do not match");
-      return;
+
+    function validateOTP() {
+      const enteredOTP = document.getElementById("otp-input").value.trim();
+      if (enteredOTP === generatedOTP) {
+        alert("Verification successful");
+        localStorage.setItem("userName", document.getElementById("fullname").value);
+        localStorage.setItem("userEmail", document.getElementById("email").value);
+        localStorage.setItem("userPassword", document.getElementById("password").value);
+        window.location.href = "login.html";
+      } else {
+        alert("Incorrect OTP");
+      }
     }
-
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-    document.getElementById("otp-display").textContent = "OTP: " + generatedOTP;
-    document.getElementById("otp-section").style.display = "block";
-  }
-
-  function validateOTP() {
-    const enteredOTP = document.getElementById("otp-input").value.trim();
-    if (enteredOTP === generatedOTP) {
-      alert("Verification successful");
-
-      localStorage.setItem("userName", document.getElementById("fullname").value);
-      localStorage.setItem("userEmail", document.getElementById("email").value);
-      localStorage.setItem("userPassword", document.getElementById("password").value);
-
-      window.location.href = "dashboard.html";  // redirect directly to dashboard
-    } else {
-      alert("Incorrect OTP");
-    }
-  }
-</script>
+  </script>
+</body>
+</html>
