@@ -1,329 +1,493 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TradingHub - Live Forex Trading</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      box-sizing: border-box;
-    }
-    body {
-      background: linear-gradient(to right, #0077ff, #00c6ff);
-      color: white;
-      min-height: 100vh;
-      display: flex;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TradingHub - Login & Trading</title>
+<style>
+  /* Basic reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif;
+  }
+  body {
+    background: linear-gradient(to right, #0077ff, #00c6ff);
+    color: #fff;
+    min-height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+    user-select: none;
+  }
+  #container {
+    background: rgba(0,0,0,0.75);
+    padding: 25px 30px;
+    border-radius: 15px;
+    width: 360px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 700;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 30px;
+    border: none;
+    background: #00c6ff;
+    color: #003366;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #0077ff;
+    color: #fff;
+  }
+  .small-link {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #99ddff;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .small-link:hover {
+    text-decoration: underline;
+  }
+  #otpDisplay {
+    background: #0077ff;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 6px;
+    text-align: center;
+    margin-bottom: 15px;
+    user-select: all;
+  }
+  #errorMsg {
+    background: #ff4444;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: 600;
+    display: none;
+  }
+  /* Trading page styles */
+  #tradingPage {
+    display: none;
+    max-width: 1200px;
+    width: 95vw;
+    margin: 20px auto;
+    color: #fff;
+  }
+  #tradingHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  #tradingHeader h1 {
+    font-weight: 700;
+  }
+  #logoutBtn {
+    background: #ff5555;
+    border-radius: 25px;
+    padding: 8px 18px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: background 0.3s ease;
+  }
+  #logoutBtn:hover {
+    background: #cc0000;
+  }
+  #mainTrading {
+    display: flex;
+    gap: 20px;
+  }
+  #leftPanel {
+    width: 320px;
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  #searchInput {
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 12px;
+    color: #003366;
+  }
+  #currencyList {
+    overflow-y: auto;
+    flex: 1;
+  }
+  #currencyList button {
+    background: transparent;
+    border: none;
+    color: #003366;
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  #currencyList button:hover,
+  #currencyList button.active {
+    background: #00c6ff;
+    color: #fff;
+  }
+  #rightPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  #pairTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+  }
+  #chartContainer {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    min-height: 400px;
+  }
+  #tradeButtons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  #tradeButtons button {
+    flex: 1;
+    background: #0077ff;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    border-radius: 30px;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #tradeButtons button:hover {
+    background: #004aa3;
+  }
+  /* Responsive */
+  @media (max-width: 960px) {
+    #mainTrading {
       flex-direction: column;
-      user-select: none;
     }
-    header {
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: rgba(0, 0, 0, 0.15);
-      position: relative;
-      z-index: 10;
-    }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: default;
-    }
-    .logo-svg {
-      width: 32px;
-      height: 32px;
-      fill: white;
-      filter: drop-shadow(0 0 1px rgba(0,0,0,0.3));
-    }
-    .logo-text {
-      font-size: 22px;
-      font-weight: 700;
-      user-select: none;
-    }
-    .menu {
-      display: none;
-      flex-direction: column;
-      background-color: white;
-      position: absolute;
-      right: 20px;
-      top: 55px;
-      color: #0077ff;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      min-width: 160px;
-      font-weight: 600;
-      user-select: none;
-    }
-    .menu a {
-      padding: 12px 20px;
-      text-decoration: none;
-      color: #0077ff;
-      border-bottom: 1px solid #ddd;
-      transition: background-color 0.25s;
-    }
-    .menu a:last-child {
-      border-bottom: none;
-    }
-    .menu a:hover {
-      background-color: #eef6ff;
-    }
-    .hamburger {
-      cursor: pointer;
-      font-size: 28px;
-      user-select: none;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      padding: 20px;
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 95vw;
-      user-select: none;
-    }
-
-    /* Left side: currency list and search */
     #leftPanel {
-      width: 320px;
-      max-width: 100%;
-      background: rgba(255 255 255 / 0.15);
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-      padding: 15px 20px;
-      display: flex;
-      flex-direction: column;
-      user-select: text;
-    }
-    #searchInput {
-      padding: 10px 15px;
-      border-radius: 25px;
-      border: none;
-      font-size: 16px;
-      outline: none;
-      margin-bottom: 12px;
-      user-select: text;
-    }
-    #currencyList {
-      overflow-y: auto;
-      flex: 1;
-    }
-    #currencyList button {
-      background: transparent;
-      border: none;
-      color: white;
       width: 100%;
-      text-align: left;
-      padding: 10px 15px;
-      margin-bottom: 6px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s;
-      user-select: none;
-    }
-    #currencyList button:hover, #currencyList button.active {
-      background: rgba(255 255 255 / 0.3);
-    }
-
-    /* Right side: chart and info */
-    #rightPanel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      user-select: none;
+      max-height: 300px;
+      margin-bottom: 20px;
     }
     #chartContainer {
-      flex: 1;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      min-height: 400px;
+      min-height: 300px;
     }
-
-    #pairTitle {
-      font-size: 24px;
-      font-weight: 700;
-      color: white;
-      text-align: center;
-      user-select: text;
-    }
-
-    /* Features section below */
-    #featuresSection {
-      background: rgba(255 255 255 / 0.15);
-      border-radius: 12px;
-      padding: 30px 20px;
-      color: white;
-      max-width: 1200px;
-      margin: 20px auto 40px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-      user-select: text;
-    }
-    #featuresSection h2 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: 700;
-      text-shadow: 0 0 5px rgba(0,0,0,0.3);
-    }
-    #featuresSection ul {
-      list-style: none;
-      padding-left: 0;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    #featuresSection ul li {
-      margin-bottom: 15px;
-      font-size: 18px;
-      line-height: 1.5;
-      position: relative;
-      padding-left: 30px;
-    }
-    #featuresSection ul li::before {
-      content: '✔';
-      position: absolute;
-      left: 0;
-      top: 0;
-      color: #00ffea;
-      font-weight: 900;
-      font-size: 20px;
-      user-select: none;
-    }
-
-    /* Header buttons */
-    .btn-group {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-      user-select: none;
-    }
-    .btn {
-      background-color: white;
-      color: #0077ff;
-      padding: 10px 24px;
-      border-radius: 30px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: 0.3s ease;
-      user-select: none;
-      box-shadow: 0 0 8px rgba(255 255 255 / 0.8);
-      display: inline-block;
-      text-align: center;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background-color: #f0f0f0;
-    }
-
-    @media (max-width: 960px) {
-      main {
-        flex-direction: column;
-      }
-      #leftPanel {
-        width: 100%;
-        max-height: 300px;
-        margin-bottom: 20px;
-      }
-      #rightPanel {
-        min-height: 300px;
-      }
-    }
-  </style>
-
-  <script>
-    if (location.hostname.includes("github.io")) {
-      window.location.replace("https://mytradinghub.cloud");
-    }
-  </script>
+  }
+</style>
 </head>
 <body>
 
-<header>
-  <div class="logo-container" title="TradingHub - Your Forex Trading Platform">
-    <svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2.8 9.2 5.6 10.6 7 13.4 4.2 12 2.8ZM5 10.7 3.6 9.3 0 13 5 18 8.3 14.7 6.9 13.3 9.7 10.5 7.9 8.7 5 10.7Zm14 0-2.8 2.8 1.4 1.4 3.3-3.3-5-4.9-2.8 2.8 1.4 1.4-3.3 3.3 3.3 3.3-1.4 1.4-3.3-3.3-3.3 3.3-1.4-1.4 3.3-3.3-1.4-1.4-2.8 2.8-5 4.9 3.3 3.3 1.4-1.4 2.8-2.8-1.4-1.4 3.3-3.3 1.8 1.8 1.2 1.2 2.8-2.8 2.8 2.8 1.4-1.4 3.3-3.3-3.3-3.3Z"/>
-    </svg>
-    <div class="logo-text">TradingHub</div>
-  </div>
-  <div class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){toggleMenu();}">☰</div>
-  <nav class="menu" id="dropdownMenu" aria-label="Site navigation menu">
-    <a href="#">Contact Us</a>
-    <a href="#">Customer Support</a>
-    <a href="#">FAQs</a>
-    <a href="#">About Us</a>
-  </nav>
-</header>
+<div id="container">
 
-<main>
-  <div id="leftPanel" role="region" aria-label="Currency pairs and search">
-    <div class="btn-group" role="group" aria-label="Primary action buttons" style="margin-bottom:10px;">
-      <a href="#" class="btn">Log In</a>
-      <a href="#" class="btn">Open Account</a>
-      <a href="#" class="btn">Contact Us</a>
-    </div>
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Search currency pairs..."
-      aria-label="Search currency pairs"
-      autocomplete="off"
-    />
-    <div id="currencyList" tabindex="0" role="listbox" aria-label="List of currency pairs" aria-live="polite">
-    </div>
-  </div>
-  <div id="rightPanel" role="main">
-    <div id="pairTitle" aria-live="polite">Loading chart...</div>
-    <div id="chartContainer" role="region" aria-label="Live trading chart"></div>
-  </div>
-</main>
+  <!-- Signup / Login forms container -->
+  <div id="authContainer">
 
-<section id="featuresSection" aria-labelledby="featuresHeading">
-  <h2 id="featuresHeading">Trade Features & Customs</h2>
-  <ul>
-    <li>Real-time live forex prices from trusted APIs updated every 10 seconds</li>
-    <li>Interactive charts powered by TradingView Lightweight Charts for smooth, responsive experience</li>
-    <li>Searchable currency pairs to quickly find and analyze your favorite markets</li>
-    <li>Simple and intuitive user interface with fast trade execution buttons</li>
-    <li>Secure login and account management to protect your trades and balance</li>
-    <li>Customizable trade lot sizes and profit/loss tracking coming soon</li>
-    <li>24/7 customer support and detailed FAQs to assist every trader</li>
-  </ul>
-</section>
+    <!-- Signup step 1: Email and password -->
+    <form id="signupForm" aria-label="Signup form">
+      <h2>Sign Up</h2>
+      <label for="signupEmail">Email address</label>
+      <input type="email" id="signupEmail" required autocomplete="email" />
+      <label for="signupPassword">Password</label>
+      <input type="password" id="signupPassword" required autocomplete="new-password" />
+      <label for="signupPasswordConfirm">Confirm Password</label>
+      <input type="password" id="signupPasswordConfirm" required autocomplete="new-password" />
+      <button type="submit">Verify Email</button>
+      <div class="small-link" id="gotoLoginFromSignup">Already have an account? Log In</div>
+      <div id="errorMsg"></div>
+    </form>
+
+    <!-- Signup step 2: OTP verification -->
+    <form id="otpForm" aria-label="OTP verification form" style="display:none;">
+      <h2>Verify OTP</h2>
+      <label for="otpInput">Enter OTP</label>
+      <input type="number" id="otpInput" required minlength="6" maxlength="6" autocomplete="one-time-code" />
+      <div id="otpDisplay" aria-live="polite" aria-label="Your one time password"></div>
+      <button type="submit">Submit OTP</button>
+      <div class="small-link" id="resendOtp">Resend OTP</div>
+      <div id="errorMsgOtp"></div>
+    </form>
+
+    <!-- Login form -->
+    <form id="loginForm" aria-label="Login form" style="display:none;">
+      <h2>Log In</h2>
+      <label for="loginEmail">Email address</label>
+      <input type="email" id="loginEmail" required autocomplete="email" />
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" required autocomplete="current-password" />
+      <button type="submit">Log In</button>
+      <div class="small-link" id="gotoSignupFromLogin">Don't have account? Sign Up</div>
+      <div class="small-link" id="forgotPassword">Forgot Password?</div>
+      <div id="errorMsgLogin"></div>
+    </form>
+
+  </div>
+</div>
+
+<!-- Trading page -->
+<div id="tradingPage" role="main" aria-label="Trading dashboard">
+
+  <div id="tradingHeader">
+    <h1>TradingHub</h1>
+    <button id="logoutBtn" aria-label="Log out">Log Out</button>
+  </div>
+
+  <div id="mainTrading">
+    <div id="leftPanel" role="region" aria-label="Currency pairs and search">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search currency pairs..."
+        aria-label="Search currency pairs"
+        autocomplete="off"
+      />
+      <div id="currencyList" tabindex="0" role="listbox" aria-label="List of currency pairs" aria-live="polite"></div>
+    </div>
+    <div id="rightPanel">
+      <div id="pairTitle" aria-live="polite">Loading chart...</div>
+      <div id="chartContainer" role="region" aria-label="Live trading chart"></div>
+      <div id="tradeButtons">
+        <button id="buyBtn">Buy</button>
+        <button id="sellBtn">Sell</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://unpkg.com/lightweight-charts@3.9.0/dist/lightweight-charts.standalone.production.js"></script>
 <script>
-  function toggleMenu() {
-    const menu = document.getElementById('dropdownMenu');
-    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+  // OTP generation helper
+  function generateOTP() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
-  // Your API key
+  // Show/hide error message
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    if (!msg) {
+      el.style.display = 'none';
+      el.textContent = '';
+    } else {
+      el.style.display = 'block';
+      el.textContent = msg;
+    }
+  }
+
+  // Elements
+  const signupForm = document.getElementById('signupForm');
+  const otpForm = document.getElementById('otpForm');
+  const loginForm = document.getElementById('loginForm');
+  const authContainer = document.getElementById('authContainer');
+  const otpDisplay = document.getElementById('otpDisplay');
+  const otpInput = document.getElementById('otpInput');
+  const searchInput = document.getElementById('searchInput');
+  const currencyList = document.getElementById('currencyList');
+  const pairTitle = document.getElementById('pairTitle');
+  const tradingPage = document.getElementById('tradingPage');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const buyBtn = document.getElementById('buyBtn');
+  const sellBtn = document.getElementById('sellBtn');
+
+  // API key for live forex pairs and chart
   const apiKey = 'a58af8d2469c4c63a44dc133a2c28481';
 
-  // Twelve Data forex pairs endpoint
-  const allPairsUrl = `https://api.twelvedata.com/forex_pairs?apikey=${apiKey}`;
-
+  // Variables to hold state
+  let generatedOtp = null;
+  let userData = {}; // To hold signup data temporarily
   let allPairs = [];
-  let chart = null;
-  let lineSeries = null;
+  let chart, lineSeries;
   let chartInterval = null;
   let selectedPair = null;
 
-  const currencyList = document.getElementById('currencyList');
-  const searchInput = document.getElementById('searchInput');
-  const pairTitle = document.getElementById('pairTitle');
+  // Show login form
+  function showLogin() {
+    signupForm.style.display = 'none';
+    otpForm.style.display = 'none';
+    loginForm.style.display = 'block';
+  }
+  // Show signup form
+  function showSignup() {
+    signupForm.style.display = 'block';
+    otpForm.style.display = 'none';
+    loginForm.style.display = 'none';
+  }
+  // Show OTP form
+  function showOtpForm() {
+    signupForm.style.display = 'none';
+    otpForm.style.display = 'block';
+    loginForm.style.display = 'none';
+  }
+  // Show trading page
+  function showTrading() {
+    authContainer.style.display = 'none';
+    tradingPage.style.display = 'block';
+  }
+  // Show auth forms container
+  function showAuth() {
+    authContainer.style.display = 'block';
+    tradingPage.style.display = 'none';
+  }
 
-  // Create button for each currency pair
+  // OTP resend button
+  document.getElementById('resendOtp').onclick = () => {
+    generatedOtp = generateOTP();
+    otpDisplay.textContent = generatedOtp;
+    showError('errorMsgOtp', ''); 
+  };
+
+  // Navigation links
+  document.getElementById('gotoLoginFromSignup').onclick = showLogin;
+  document.getElementById('gotoSignupFromLogin').onclick = showSignup;
+
+  // Forgot password - just alert for demo
+  document.getElementById('forgotPassword').onclick = () => {
+    alert('Forgot Password feature is not implemented in demo');
+  };
+
+  // Signup form submit: Validate and generate OTP
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    showError('errorMsg', '');
+
+    const email = signupForm.signupEmail.value.trim();
+    const pass = signupForm.signupPassword.value.trim();
+    const passConfirm = signupForm.signupPasswordConfirm.value.trim();
+
+    if (!email.includes('@')) {
+      showError('errorMsg', 'Please enter a valid email');
+      return;
+    }
+    if (pass.length < 6) {
+      showError('errorMsg', 'Password must be at least 6 characters');
+      return;
+    }
+    if (pass !== passConfirm) {
+      showError('errorMsg', 'Passwords do not match');
+      return;
+    }
+
+    userData.email = email;
+    userData.password = pass;
+
+    // Generate and show OTP
+    generatedOtp = generateOTP();
+    otpDisplay.textContent = generatedOtp;
+
+    showOtpForm();
+  });
+
+  // OTP form submit: Check OTP and move to login form
+  otpForm.addEventListener('submit', e => {
+    e.preventDefault();
+    showError('errorMsgOtp', '');
+
+    if (otpInput.value.trim() === generatedOtp) {
+      alert('Email verified! Please log in now.');
+      showLogin();
+    } else {
+      showError('errorMsgOtp', 'Incorrect OTP, please try again.');
+    }
+  });
+
+  // Login form submit: simple dummy validation for demo
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    showError('errorMsgLogin', '');
+
+    const email = loginForm.loginEmail.value.trim();
+    const pass = loginForm.loginPassword.value.trim();
+
+    // For demo, accept only the userData.email and password created above
+    if (email === userData.email && pass === userData.password) {
+      showTrading();
+      initChartAndPairs();
+    } else {
+      showError('errorMsgLogin', 'Invalid email or password');
+    }
+  });
+
+  // Logout button
+  logoutBtn.onclick = () => {
+    userData = {};
+    showAuth();
+    clearChartInterval();
+  };
+
+  // Fetch all currency pairs for Forex from 12Data API
+  async function fetchPairs() {
+    try {
+      const res = await fetch(`https://api.twelvedata.com/forex_pairs?apikey=${apiKey}`);
+      const json = await res.json();
+      if (json.data) {
+        allPairs = json.data.map(pair => ({ symbol: pair.symbol }));
+      } else {
+        allPairs = [
+          { symbol: 'EUR/USD' },
+          { symbol: 'USD/JPY' },
+          { symbol: 'GBP/USD' },
+          { symbol: 'USD/CHF' },
+          { symbol: 'AUD/USD' },
+          { symbol: 'USD/CAD' },
+          { symbol: 'NZD/USD' }
+        ]; // fallback pairs
+      }
+    } catch {
+      allPairs = [
+        { symbol: 'EUR/USD' },
+        { symbol: 'USD/JPY' },
+        { symbol: 'GBP/USD' },
+        { symbol: 'USD/CHF' },
+        { symbol: 'AUD/USD' },
+        { symbol: 'USD/CAD' },
+        { symbol: 'NZD/USD' }
+      ];
+    }
+  }
+
+  // Create currency list buttons
   function createPairButton(pair) {
     const btn = document.createElement('button');
     btn.textContent = pair.symbol;
@@ -347,6 +511,7 @@
     });
   }
 
+  // Render currency buttons
   function renderPairs(pairsToShow) {
     currencyList.innerHTML = '';
     pairsToShow.forEach(pair => {
@@ -355,12 +520,14 @@
     });
   }
 
+  // Filter currency pairs by search term
   function filterPairs(term) {
     if (!term) return allPairs;
     const lower = term.toLowerCase();
     return allPairs.filter(p => p.symbol.toLowerCase().includes(lower));
   }
 
+  // Initialize TradingView lightweight chart
   function initChart() {
     const chartContainer = document.getElementById('chartContainer');
     chartContainer.innerHTML = '';
@@ -385,8 +552,14 @@
     });
   }
 
-  function fetchAndUpdateChart(symbol) {
+  // Clear chart update interval
+  function clearChartInterval() {
     if (chartInterval) clearInterval(chartInterval);
+  }
+
+  // Fetch and update chart data
+  function fetchAndUpdateChart(symbol) {
+    clearChartInterval();
 
     const symbolFormatted = symbol.replace('/', '');
 
@@ -438,6 +611,19 @@
     }, 60000);
   }
 
+  // Initialize chart and load pairs after login
+  async function initChartAndPairs() {
+    initChart();
+    await fetchPairs();
+    renderPairs(allPairs);
+    if (allPairs.length > 0) {
+      selectedPair = allPairs[0].symbol;
+      updateSelectedButton();
+      fetchAndUpdateChart(selectedPair);
+    }
+  }
+
+  // Search input event
   searchInput.addEventListener('input', () => {
     const filtered = filterPairs(searchInput.value);
     renderPairs(filtered);
@@ -451,35 +637,17 @@
     }
   });
 
-  window.addEventListener('resize', () => {
-    if (chart) {
-      const chartContainer = document.getElementById('chartContainer');
-      chart.applyOptions({ width: chartContainer.clientWidth });
-    }
+  // Buy/Sell button handlers (demo)
+  buyBtn.addEventListener('click', () => {
+    alert(`Buy order placed for ${selectedPair}`);
+  });
+  sellBtn.addEventListener('click', () => {
+    alert(`Sell order placed for ${selectedPair}`);
   });
 
-  // Initialize chart and load pairs on page load
-  window.onload = () => {
-    initChart();
-    fetch(allPairsUrl)
-      .then(res => res.json())
-      .then(data => {
-        if (data.data) {
-          allPairs = data.data.map(pair => ({ symbol: pair.symbol }));
-          renderPairs(allPairs);
-          if (allPairs.length > 0) {
-            selectedPair = allPairs[0].symbol;
-            updateSelectedButton();
-            fetchAndUpdateChart(selectedPair);
-          }
-        } else {
-          pairTitle.textContent = 'Unable to load currency pairs';
-        }
-      })
-      .catch(() => {
-        pairTitle.textContent = 'Error fetching currency pairs';
-      });
-  };
+  // On page load show signup form
+  showSignup();
+
 </script>
 
 </body>
