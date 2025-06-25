@@ -94,6 +94,7 @@
 
   <script>
     <script>
+  <script>
   let generatedOTP = "";
 
   function generateOTP() {
@@ -111,7 +112,6 @@
       return;
     }
 
-    // generate 6-digit OTP
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
     document.getElementById("otp-display").textContent = "OTP: " + generatedOTP;
     document.getElementById("otp-section").style.display = "block";
@@ -122,12 +122,11 @@
     if (enteredOTP === generatedOTP) {
       alert("Verification successful");
 
-      // save user details in localStorage for login
       localStorage.setItem("userName", document.getElementById("fullname").value);
       localStorage.setItem("userEmail", document.getElementById("email").value);
-      localStorage.setItem("userPassword", document.getElementById("password").value);  // <== save password here
+      localStorage.setItem("userPassword", document.getElementById("password").value);
 
-      window.location.href = "userdetails.html";
+      window.location.href = "dashboard.html";  // redirect directly to dashboard
     } else {
       alert("Incorrect OTP");
     }
