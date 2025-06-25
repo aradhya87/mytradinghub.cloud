@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - User Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">User Management</h2>
+
+    <div class="mb-3">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search user by email" />
+    </div>
+
+    <table class="table table-bordered bg-white" id="usersTable">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Balance ($)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Users will be loaded here -->
+      </tbody>
+    </table>
+
+    <div class="text-center mt-3">
+      <a href="dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    const usersTableBody = document.querySelector('#usersTable tbody');
+    const searchInput = document.getElementById('searchInput');
+
+    // Load users from localStorage
+    function loadUsers(filter = '') {
+      usersTableBody.innerHTML = '';
+      const balances = JSON.parse(localStorage.getItem('balances') || '{}');
+      const emails = Object.keys(balances).filter(email => email.toLowerCase().includes(filter.toLowerCase()));
+
+      if (emails.length === 0) {
+        usersTableBody.innerHTML = '<tr><td colspan="3" class="text-center">No users found.</td></tr>';
+        return;
+      }
+
+      emails.forEach(email => {
+        const tr = document.createElement('tr');
+
+        const emailTd = document.createElement('td');
+        emailTd.textContent = email;
+
+        const balanceTd = document.createElement('td');
+        balanceTd.textContent = balances[email].toFixed(2);
+
+        const actionsTd = document.createElement('td');
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger btn-sm';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => {
+          if (confirm(`Are you sure to delete user ${email}?`)) {
+            deleteUser(email);
+          }
+        };
+        actionsTd.appendChild(deleteBtn);
+
+        tr.appendChild(emailTd);
+        tr.appendChild(balanceTd);
+        tr.appendChild(actionsTd);
+
+        usersTableBody.appendChild(tr);
+      });
+    }
+
+    // Delete user
+    function deleteUser(email) {
+      const balances = JSON.parse(localStorage.getItem('balances') || '{}');
+      delete balances[email];
+      localStorage.setItem('balances', JSON.stringify(balances));
+      loadUsers(searchInput.value);
+      alert(`User ${email} deleted successfully.`);
+    }
+
+    // Search filter
+    searchInput.addEventListener('input', () => {
+      loadUsers(searchInput.value);
+    });
+
+    // Initial load
+    loadUsers();
+  </script>
+</body>
+</html>
