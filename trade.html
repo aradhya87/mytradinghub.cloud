@@ -59,12 +59,13 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 15px;
     }
-    #margin-info {
-      margin-top: 12px;
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: #0055ff;
+    #trade-status {
+      margin-top: 20px;
       text-align: center;
+      font-size: 1.1rem;
+    }
+    #trade-status span {
+      font-weight: bold;
     }
     .actions {
       margin-top: 30px;
@@ -104,13 +105,15 @@
       </ul>
     </div>
     <div class="main-content">
-      <div class="chart-container" id="chart">
-        <!-- TradingView Widget -->
+      <div class="chart-container">
         <iframe id="live-chart" src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=1&theme=light"
           style="width:100%;height:100%;border:0;" allowtransparency="true"></iframe>
       </div>
 
-      <div id="margin-info">Margin Profit/Loss: $+0.00</div>
+      <div id="trade-status">
+        <strong>Active Trade:</strong> <span id="active-trade">None</span><br />
+        <strong>Margin Profit/Loss:</strong> <span id="margin-info" style="color:#0055ff;">$0.00</span>
+      </div>
 
       <div class="actions">
         <button class="buy">Buy</button>
@@ -120,28 +123,38 @@
   </div>
 
   <script>
-    // update iframe src when selecting pair
     const pairs = document.querySelectorAll("#pairs-list li");
     const chart = document.getElementById("live-chart");
     const marginDisplay = document.getElementById("margin-info");
+    const activeTrade = document.getElementById("active-trade");
+    let currentPair = "BTC/USDT";
 
     pairs.forEach(item => {
       item.addEventListener("click", () => {
-        const symbol = "BINANCE:" + item.textContent.replace("/", "");
+        currentPair = item.textContent;
+        const symbol = "BINANCE:" + currentPair.replace("/", "");
         chart.src = `https://www.tradingview.com/widgetembed/?symbol=${symbol}&interval=1&theme=light`;
-
-        const margin = (Math.random() * 100 - 50).toFixed(2);
-        marginDisplay.textContent = `Margin Profit/Loss: $${margin}`;
+        marginDisplay.textContent = "$0.00";
+        activeTrade.textContent = "None";
       });
     });
 
-    // search filter
     document.getElementById("search-box").addEventListener("input", function () {
       const filter = this.value.toUpperCase();
       pairs.forEach(pair => {
         pair.style.display = pair.textContent.toUpperCase().includes(filter) ? "block" : "none";
       });
     });
+
+    function openTrade(type) {
+      const margin = (Math.random() * 100 - 50).toFixed(2);
+      marginDisplay.textContent = `$${margin}`;
+      marginDisplay.style.color = margin >= 0 ? "#0b8f0b" : "#ff0000";
+      activeTrade.textContent = `${type} ${currentPair}`;
+    }
+
+    document.querySelector(".buy").addEventListener("click", () => openTrade("Buy"));
+    document.querySelector(".sell").addEventListener("click", () => openTrade("Sell"));
   </script>
 </body>
 </html>
