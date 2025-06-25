@@ -1,44 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Support - MyTradingHub</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Support - MyTradingHub</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    background: #f5f9ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #0d1b37;
+    margin: 0; padding: 20px;
+  }
+  header {
+    background: #0055ff; color: white; padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-weight: 900; font-size: 1.5rem; letter-spacing: 2px;
+  }
+  nav {
+    display: flex; gap: 18px;
+  }
+  nav a {
+    font-weight: 600; padding: 8px 14px; border-radius: 4px; color: white;
+    text-decoration: none;
+  }
+  nav a:hover {
+    background: #ffd600; color: #0055ff;
+  }
+  main {
+    max-width: 900px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgb(0 85 255 / 0.15);
+  }
+  h1 {
+    color: #0055ff;
+    margin-top: 0;
+  }
+  p, li {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  ul {
+    padding-left: 20px;
+  }
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MyTradingHub</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="support.html">Support</a>
-      <a href="faq.html">FAQs</a>
-    </nav>
-  </header>
+<header>
+  <div class="logo">MyTradingHub</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="support.html" class="active">Support</a>
+    <a href="faq.html">FAQs</a>
+    <a href="login.html">Log In</a>
+    <a href="signup.html">Open Account</a>
+  </nav>
+</header>
 
-  <div class="chart-area" style="padding: 30px;">
-    <h2>Customer Support</h2>
-    <p>Welcome to MyTradingHub Support. We are here to assist you 24/7 with any questions or issues you might have.</p>
-
-    <h3>Contact Us</h3>
-    <p>Email: <a href="mailto:support@mytradinghub.cloud">support@mytradinghub.cloud</a></p>
-    <p>Phone: +1-800-TRADERHUB</p>
-
-    <h3>Support Hours</h3>
-    <p>Monday to Friday: 9:00 AM - 6:00 PM</p>
-    <p>Saturday: 10:00 AM - 4:00 PM</p>
-    <p>Sunday: Closed</p>
-
-    <h3>How to Get Help</h3>
-    <ul>
-      <li>Check our <a href="faq.html">FAQs</a> for quick answers.</li>
-      <li>Send us an email anytime and we’ll get back to you promptly.</li>
-      <li>Call our support number during business hours.</li>
-    </ul>
-
-    <h3>Feedback</h3>
-    <p>We value your feedback to improve our services. Please reach out to us with any suggestions or concerns.</p>
-  </div>
+<main>
+  <h1>Customer Support</h1>
+  <p>If you have any questions or need assistance please reach out to our support team. We are here to help you 24/7.</p>
+  <ul>
+    <li>Email: support@mytradinghub.cloud</li>
+    <li>Phone: +1-800-555-1234</li>
+    <li>Live Chat: Available on our website during business hours</li>
+  </ul>
+  <p>We value your feedback and are committed to providing the best trading experience.</p>
+</main>
 </body>
 </html>
