@@ -1,225 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - MyTradingHub</title>
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyTradingHub - Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f6ff;
-      display: flex;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
     }
     .sidebar {
       width: 250px;
-      background: #001d4a;
-      color: white;
-      padding: 20px;
-    }
-    .sidebar h2 {
-      color: #ffc107;
-      margin-bottom: 10px;
-    }
-    .sidebar .user-info {
-      margin-bottom: 20px;
-    }
-    .sidebar .user-info p {
-      margin: 5px 0;
-    }
-    .sidebar input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 6px;
-      border: none;
-    }
-    .pair-list button {
-      display: block;
-      background: transparent;
-      border: none;
-      color: white;
-      padding: 10px;
-      text-align: left;
-      width: 100%;
-      cursor: pointer;
+      background: #ffffff;
+      height: 100vh;
+      position: fixed;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
     }
     .main-content {
-      flex: 1;
+      margin-left: 250px;
       padding: 20px;
     }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .menu {
-      position: relative;
-    }
-    .menu-btn {
-      background: #0055ff;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
+    .account-dropdown {
+      position: absolute;
+      right: 20px;
+      top: 20px;
       cursor: pointer;
     }
-    .dropdown {
-      display: none;
-      position: absolute;
-      top: 45px;
+    .dropdown-menu {
       right: 0;
+      left: auto;
+    }
+    .trade-panel {
       background: white;
-      border: 1px solid #ccc;
       border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .dropdown a {
-      display: block;
-      padding: 10px 16px;
-      text-decoration: none;
-      color: #333;
-    }
-    .dropdown a:hover {
-      background: #f0f0f0;
-    }
-    canvas {
-      max-width: 100%;
-    }
-    .trade-actions {
-      margin-top: 20px;
-    }
-    .trade-actions input {
+    .chart-container {
+      background: white;
+      border-radius: 8px;
       padding: 10px;
-      margin: 5px;
-      width: 100px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .trade-result {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-    .history {
-      margin-top: 30px;
+    .list-group-item {
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>TradingHub</h2>
-    <div class="user-info">
-      <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
-      <p><strong>Balance:</strong> $<span id="userBalance">10000.00</span></p>
-    </div>
-    <input type="text" id="search" placeholder="Search pairs..." oninput="filterPairs()">
-    <div class="pair-list" id="pairList">
-      <button onclick="loadChart('BTCUSD')">BTCUSD</button>
-      <button onclick="loadChart('ETHUSD')">ETHUSD</button>
-      <button onclick="loadChart('EURUSD')">EURUSD</button>
-      <button onclick="loadChart('XAUUSD')">XAUUSD</button>
-    </div>
+
+  <!-- Sidebar with currency pairs -->
+  <div class="sidebar p-3">
+    <h5>Forex Pairs</h5>
+    <ul class="list-group" id="pairList">
+      <li class="list-group-item" data-symbol="OANDA:XAUUSD">XAUUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:EURUSD">EURUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:GBPUSD">GBPUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:BTCUSD">BTCUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:ETHUSD">ETHUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:USDJPY">USDJPY</li>
+      <li class="list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
+      <li class="list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
+    </ul>
   </div>
+
+  <!-- Main content area -->
   <div class="main-content">
-    <div class="header">
-      <h2>Dashboard</h2>
-      <div class="menu">
-        <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
-        <div class="dropdown" id="dropdown">
-          <a href="deposit.html">Deposit</a>
-          <a href="withdrawal.html">Withdrawal</a>
-          <a href="wallet.html">Wallet</a>
-          <a href="verify.html">Real Name Verification</a>
-          <a href="invite.html">Invite Friends</a>
-          <a href="changepassword.html">Change Password</a>
-          <a href="announcement.html">Announcement</a>
-          <a href="support.html">Online Service</a>
-          <a href="index.html">Logout</a>
-        </div>
+    <div class="d-flex justify-content-end">
+      <div class="dropdown account-dropdown">
+        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          user@example.com | $91,502.96
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Billing Details</a></li>
+          <li><a class="dropdown-item" href="#">Deposit</a></li>
+          <li><a class="dropdown-item" href="#">Withdrawal</a></li>
+          <li><a class="dropdown-item" href="#">Wallet</a></li>
+          <li><a class="dropdown-item" href="#">Real Name Verification</a></li>
+          <li><a class="dropdown-item" href="#">Invite Friends</a></li>
+          <li><a class="dropdown-item" href="#">Change Password</a></li>
+          <li><a class="dropdown-item" href="#">Announcement</a></li>
+          <li><a class="dropdown-item" href="#">Online Service</a></li>
+          <li><a class="dropdown-item" href="#">Return Simulated Account</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+        </ul>
       </div>
     </div>
 
-    <h3 id="selectedPair">Selected Pair: BTCUSD</h3>
-    <canvas id="chart" height="120"></canvas>
-
-    <div class="trade-actions">
-      <input type="number" id="lots" placeholder="Lots" />
-      <button onclick="trade('buy')">Buy</button>
-      <button onclick="trade('sell')">Sell</button>
+    <!-- Chart Area -->
+    <div class="chart-container">
+      <iframe id="chartFrame" src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD" width="100%" height="400" frameborder="0"></iframe>
     </div>
-    <div class="trade-result" id="result"></div>
 
-    <div class="history">
-      <h4>Past 7 Days History</h4>
-      <ul id="tradeHistory">
-        <li>Buy BTCUSD - Profit: +5%</li>
-        <li>Sell ETHUSD - Loss: -2%</li>
-        <li>Buy EURUSD - Profit: +3%</li>
-        <li>Sell XAUUSD - Profit: +1%</li>
-      </ul>
+    <!-- Trade panel -->
+    <div class="trade-panel">
+      <h5 id="pairTitle">XAUUSD</h5>
+      <p><strong>Market Price:</strong> <span id="marketPrice">3329.04</span></p>
+      <form>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label>Multiplier</label>
+            <input type="number" class="form-control" value="100">
+          </div>
+          <div class="col-md-3">
+            <label>Set Loss</label>
+            <input type="number" class="form-control" value="0">
+          </div>
+          <div class="col-md-3">
+            <label>Take Profit</label>
+            <input type="number" class="form-control" value="0">
+          </div>
+          <div class="col-md-3">
+            <label>Lots (Step: 0.01)</label>
+            <input type="number" class="form-control" value="1">
+          </div>
+        </div>
+        <div class="mt-3 d-flex justify-content-between">
+          <button class="btn btn-success w-25">Buy</button>
+          <button class="btn btn-danger w-25">Sell</button>
+        </div>
+      </form>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let currentPair = 'BTCUSD';
-    let userBalance = parseFloat(localStorage.getItem('userBalance')) || 10000;
-    const chart = new Chart(document.getElementById('chart'), {
-      type: 'line',
-      data: {
-        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-        datasets: [{
-          label: 'Price',
-          data: [40000, 40500, 39800, 41000, 42000, 41800, 43000],
-          borderColor: '#0055ff',
-          fill: false
-        }]
-      }
-    });
-
-    function loadChart(pair) {
-      currentPair = pair;
-      document.getElementById('selectedPair').textContent = 'Selected Pair: ' + pair;
-      chart.data.datasets[0].data = chart.data.datasets[0].data.map(v => v * (Math.random() * 0.1 + 0.95));
-      chart.update();
-    }
-
-    function trade(type) {
-      const lots = parseFloat(document.getElementById('lots').value);
-      if (!lots || lots <= 0) {
-        alert('Enter valid lot size');
-        return;
-      }
-      const margin = ((Math.random() * 2 - 1) * lots * 10).toFixed(2);
-      userBalance += parseFloat(margin);
-      localStorage.setItem('userBalance', userBalance.toFixed(2));
-      document.getElementById('userBalance').textContent = userBalance.toFixed(2);
-      const resultText = `${type.toUpperCase()} ${currentPair} → Margin: ${margin > 0 ? '+' : ''}${margin}`;
-      document.getElementById('result').textContent = resultText;
-
-      const li = document.createElement('li');
-      li.textContent = resultText;
-      document.getElementById('tradeHistory').prepend(li);
-    }
-
-    function filterPairs() {
-      const search = document.getElementById('search').value.toLowerCase();
-      const buttons = document.querySelectorAll('#pairList button');
-      buttons.forEach(btn => {
-        btn.style.display = btn.textContent.toLowerCase().includes(search) ? 'block' : 'none';
+    $(document).ready(function() {
+      $('#pairList li').on('click', function() {
+        const symbol = $(this).data('symbol');
+        const pair = $(this).text();
+        $('#chartFrame').attr('src', `https://www.tradingview.com/chart/?symbol=${symbol}`);
+        $('#pairTitle').text(pair);
+        $('#marketPrice').text('Loading...');
       });
-    }
-
-    function toggleMenu() {
-      const drop = document.getElementById('dropdown');
-      drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
-    }
-
-    // Set user email and balance
-    document.getElementById('userEmail').textContent = localStorage.getItem('userEmail') || 'guest@trade.com';
-    document.getElementById('userBalance').textContent = userBalance.toFixed(2);
+    });
   </script>
 </body>
 </html>
