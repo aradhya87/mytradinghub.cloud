@@ -1,25 +1,38 @@
-const ticker = document.getElementById('ticker');
+// script.js
 
-const pairs = [
-  { name: 'AUDUSD', bid: 0.66921, ask: 0.66933 },
-  { name: 'EURUSD', bid: 1.09681, ask: 1.09694 },
-  { name: 'GBPUSD', bid: 1.2838, ask: 1.28402 },
-  { name: 'USDCAD', bid: 1.32769, ask: 1.32785 }
-];
-
-function updateTicker() {
-  ticker.innerHTML = '';
-  pairs.forEach(pair => {
-    const spread = (pair.ask - pair.bid).toFixed(1);
-    ticker.innerHTML += `
-      <div>
-        <strong>${pair.name}</strong><br>
-        Bid ${pair.bid}<br>
-        Ask ${pair.ask}<br>
-        Spread <span style="color: green">${spread}</span>
-      </div>
-    `;
-  });
+function openTradeModal(action) {
+  document.getElementById("trade-modal").classList.remove("hidden");
+  document.getElementById("modal-action").innerText = action === "buy" ? "Buy Lots" : "Sell Lots";
+  document.getElementById("modal-action").dataset.type = action;
 }
 
-updateTicker();
+function closeModal() {
+  document.getElementById("trade-modal").classList.add("hidden");
+}
+
+function confirmTrade() {
+  const action = document.getElementById("modal-action").dataset.type;
+  const lotSize = document.getElementById("lot-size").value;
+
+  if (lotSize <= 0) {
+    alert("Please enter a valid lot size");
+    return;
+  }
+
+  const message = `You placed a ${action.toUpperCase()} order of ${lotSize} lots`;
+  alert(message);
+  closeModal();
+
+  // Fake gain/loss update for demo
+  const gainLoss = document.getElementById("gain-loss");
+  const random = Math.random();
+  gainLoss.innerText = action === "buy"
+    ? `Gain: +${(random * 3).toFixed(2)}%`
+    : `Loss: -${(random * 3).toFixed(2)}%`;
+}
+
+// Optional: Live price simulation
+setInterval(() => {
+  const price = (26500 + Math.random() * 300).toFixed(2);
+  document.getElementById("live-price").innerText = `Price: $${price}`;
+}, 3000);
