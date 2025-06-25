@@ -50,6 +50,11 @@
   .list-group-item {
     cursor: pointer;
   }
+  #profitLoss {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
@@ -95,7 +100,7 @@
   <div class="chart-container">
     <iframe
       id="chartFrame"
-      src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD"
+      src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=0&toolbarbg=F1F3F6&studies=[]&hideideas=1&theme=Light"
       width="100%"
       height="400"
       frameborder="0"
@@ -104,10 +109,13 @@
     ></iframe>
   </div>
 
+  <!-- Profit / Loss Display -->
+  <div id="profitLoss" class="text-center text-secondary">Profit / Loss: $0.00</div>
+
   <!-- Trade panel -->
   <div class="trade-panel">
     <h5 id="pairTitle">XAUUSD</h5>
-    <p><strong>Market Price:</strong> <span id="marketPrice">Loading...</span></p>
+    <p><strong>Market Price:</strong> $<span id="marketPrice">Loading...</span></p>
     <form id="tradeForm">
       <div class="row g-3">
         <div class="col-md-3">
@@ -137,56 +145,80 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
     // Load user email and balance from localStorage
     const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
-    const userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+    let userBalance = parseFloat(localStorage.getItem('userBalance')) || 10000; // default 10k for demo
 
     $('#userEmail').text(userEmail);
     $('#userBalance').text(userBalance.toFixed(2));
 
+    // Current trade info
+    let currentSymbol = 'OANDA:XAUUSD';
+    let currentPrice = 0;
+
     // Currency pair selection
-    $('#pairList li').on('click', function() {
-      const symbol = $(this).data('symbol');
+    $('#pairList li').on('click', function () {
+      currentSymbol = $(this).data('symbol');
       const pair = $(this).text();
-      $('#chartFrame').attr('src', `https://www.tradingview.com/chart/?symbol=${symbol}`);
+      $('#chartFrame').attr('src', `https://s.tradingview.com/widgetembed/?symbol=${currentSymbol}&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=0&toolbarbg=F1F3F6&studies=[]&hideideas=1&theme=Light`);
       $('#pairTitle').text(pair);
       $('#marketPrice').text('Loading...');
-      fetchPrice(symbol);
+      fetchPrice(currentSymbol);
+      updateProfitLoss(0); // reset profit/loss on pair change
     });
 
-    // Fetch market price from Finnhub or fallback (simplified)
+    // Fake price fetcher (replace with your real API later)
     function fetchPrice(symbol) {
-      // Example: Use your API key and logic here to fetch real price
-      // For demo, just show fake price after 1 sec
-      setTimeout(() => {
-        $('#marketPrice').text('$' + (Math.random() * 10000).toFixed(2));
-      }, 1000);
+      // For demo, random price between 3000 and 3500 for XAUUSD, else random 1-100 for others
+      let price = 0;
+      if (symbol === 'OANDA:XAUUSD') price = (3000 + Math.random() * 500).toFixed(2);
+      else price = (1 + Math.random() * 100).toFixed(2);
+
+      currentPrice = parseFloat(price);
+      $('#marketPrice').text(currentPrice);
     }
 
-    // Initial fetch price
-    fetchPrice('OANDA:XAUUSD');
+    fetchPrice(currentSymbol);
 
-    // Trade form submit - Buy or Sell
-    $('#tradeForm').on('submit', function(e) {
+    // Update profit/loss display below chart
+    function updateProfitLoss(amount) {
+      const sign = amount >= 0 ? '+' : '-';
+      const color = amount >= 0 ? 'text-success' : 'text-danger';
+      $('#profitLoss').removeClass('text-success text-danger').addClass(color).text(`Profit / Loss: ${sign}$${Math.abs(amount).toFixed(2)}`);
+    }
+
+    // Handle buy/sell form submit
+    $('#tradeForm').on('submit', function (e) {
       e.preventDefault();
       const action = $(document.activeElement).attr('id'); // buyBtn or sellBtn
       const lots = parseFloat($('#lots').val());
       const multiplier = parseInt($('#multiplier').val());
       const setLoss = parseFloat($('#setLoss').val());
       const takeProfit = parseFloat($('#takeProfit').val());
-      const pair = $('#pairTitle').text();
-      const price = parseFloat($('#marketPrice').text().replace('$', ''));
 
-      if (isNaN(price) || price === 0) {
+      if (isNaN(currentPrice) || currentPrice === 0) {
         alert('Market price not available');
         return;
       }
-      // Example profit/loss calculation
+
       const margin = lots * multiplier;
-      // Show a simple alert or update your trades list here
-      alert(`${action.toUpperCase()} order placed for ${lots} lots of ${pair} at $${price} with margin ${margin}`);
-      // You can extend to save trade history and update balance here
+      if (margin > userBalance) {
+        alert('Insufficient balance for this trade');
+        return;
+      }
+
+      // Deduct margin from user balance (simplified)
+      userBalance -= margin;
+      localStorage.setItem('userBalance', userBalance.toFixed(2));
+      $('#userBalance').text(userBalance.toFixed(2));
+
+      // Simulate profit/loss (random example)
+      const profitLoss = (Math.random() * 2 - 1) * margin * 0.1; // +/- 10% of margin
+
+      updateProfitLoss(profitLoss);
+
+      alert(`${action.toUpperCase()} order placed for ${lots} lots of ${$('#pairTitle').text()} at $${currentPrice.toFixed(2)} with margin $${margin.toFixed(2)}`);
     });
   });
 </script>
