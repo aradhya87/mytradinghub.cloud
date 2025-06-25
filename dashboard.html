@@ -1,187 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyTradingHub - Dashboard</title>
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-  />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6fa;
-    }
-    .sidebar {
-      width: 250px;
-      background: #ffffff;
-      height: 100vh;
-      position: fixed;
-      overflow-y: auto;
-      border-right: 1px solid #ddd;
-    }
-    .main-content {
-      margin-left: 250px;
-      padding: 20px;
-    }
-    .account-dropdown {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      cursor: pointer;
-    }
-    .dropdown-menu {
-      right: 0;
-      left: auto;
-    }
-    .trade-panel {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .chart-container {
-      background: white;
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .list-group-item {
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MyTradingHub - Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fa;
+  }
+  .sidebar {
+    width: 250px;
+    background: #fff;
+    height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+  }
+  .main-content {
+    margin-left: 250px;
+    padding: 20px;
+  }
+  .account-info {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    text-align: right;
+  }
+  .account-info .email {
+    font-weight: bold;
+  }
+  .trade-panel {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .chart-container {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .list-group-item {
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <!-- Sidebar with currency pairs -->
-  <div class="sidebar p-3">
-    <h5>Forex Pairs</h5>
-    <ul class="list-group" id="pairList">
-      <li class="list-group-item" data-symbol="OANDA:XAUUSD">XAUUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:EURUSD">EURUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:GBPUSD">GBPUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:BTCUSD">BTCUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:ETHUSD">ETHUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:USDJPY">USDJPY</li>
-      <li class="list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
-    </ul>
+
+<div class="sidebar p-3">
+  <h5>Forex Pairs</h5>
+  <ul class="list-group" id="pairList">
+    <li class="list-group-item" data-symbol="OANDA:XAUUSD">XAUUSD</li>
+    <li class="list-group-item" data-symbol="OANDA:EURUSD">EURUSD</li>
+    <li class="list-group-item" data-symbol="OANDA:GBPUSD">GBPUSD</li>
+    <li class="list-group-item" data-symbol="OANDA:BTCUSD">BTCUSD</li>
+    <li class="list-group-item" data-symbol="OANDA:ETHUSD">ETHUSD</li>
+    <li class="list-group-item" data-symbol="OANDA:USDJPY">USDJPY</li>
+    <li class="list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
+    <li class="list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
+  </ul>
+</div>
+
+<div class="main-content">
+
+  <div class="account-info">
+    <div class="email" id="userEmail">user@example.com</div>
+    <div class="balance" id="userBalance">$0.00</div>
   </div>
 
-  <!-- Main content area -->
-  <div class="main-content">
-    <div class="d-flex justify-content-end">
-      <div class="dropdown account-dropdown">
-        <button
-          class="btn btn-primary dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          id="userInfo"
-        >
-          Loading...
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="deposit.html">Deposit</a></li>
-          <li><a class="dropdown-item" href="withdrawal.html">Withdrawal</a></li>
-          <li><a class="dropdown-item" href="wallet.html">Wallet</a></li>
-          <li><a class="dropdown-item" href="verify.html">Real Name Verification</a></li>
-          <li><a class="dropdown-item" href="invite.html">Invite Friends</a></li>
-          <li><a class="dropdown-item" href="changepassword.html">Change Password</a></li>
-          <li><a class="dropdown-item" href="#">Announcement</a></li>
-          <li><a class="dropdown-item" href="https://t.me/tradinghub_cloud" target="_blank">Online Service</a></li>
-          <li><a class="dropdown-item" href="#">Return Simulated Account</a></li>
-          <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
-        </ul>
+  <div class="chart-container">
+    <iframe
+      id="chartFrame"
+      src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD"
+      width="100%"
+      height="400"
+      frameborder="0"
+    ></iframe>
+  </div>
+
+  <div class="trade-panel">
+    <h5 id="pairTitle">XAUUSD</h5>
+    <p><strong>Market Price:</strong> <span id="marketPrice">Loading...</span></p>
+    <form id="tradeForm">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label>Multiplier</label>
+          <input type="number" class="form-control" id="multiplier" value="100" min="1" />
+        </div>
+        <div class="col-md-3">
+          <label>Set Loss</label>
+          <input type="number" class="form-control" id="setLoss" value="0" min="0" />
+        </div>
+        <div class="col-md-3">
+          <label>Take Profit</label>
+          <input type="number" class="form-control" id="takeProfit" value="0" min="0" />
+        </div>
+        <div class="col-md-3">
+          <label>Lots (Step: 0.01)</label>
+          <input
+            type="number"
+            class="form-control"
+            id="lots"
+            value="1"
+            step="0.01"
+            min="0.01"
+          />
+        </div>
       </div>
+      <div class="mt-3 d-flex justify-content-between">
+        <button type="button" class="btn btn-success w-25" id="buyBtn">Buy</button>
+        <button type="button" class="btn btn-danger w-25" id="sellBtn">Sell</button>
+      </div>
+    </form>
+
+    <div class="mt-3">
+      <strong>Open Trades</strong>
+      <table class="table table-sm" id="tradeHistory" style="font-size: 14px;">
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Direction</th>
+            <th>Lots</th>
+            <th>Open Price</th>
+            <th>Current Price</th>
+            <th>Profit/Loss</th>
+            <th>Close</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <!-- Chart Area -->
-    <div class="chart-container">
-      <iframe
-        id="chartFrame"
-        src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD"
-        width="100%"
-        height="400"
-        frameborder="0"
-      ></iframe>
-    </div>
-
-    <!-- Trade panel -->
-    <div class="trade-panel">
-      <h5 id="pairTitle">XAUUSD</h5>
-      <p><strong>Market Price:</strong> <span id="marketPrice">3329.04</span></p>
-      <form>
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label>Multiplier</label>
-            <input type="number" class="form-control" value="100" />
-          </div>
-          <div class="col-md-3">
-            <label>Set Loss</label>
-            <input type="number" class="form-control" value="0" />
-          </div>
-          <div class="col-md-3">
-            <label>Take Profit</label>
-            <input type="number" class="form-control" value="0" />
-          </div>
-          <div class="col-md-3">
-            <label>Lots (Step: 0.01)</label>
-            <input type="number" class="form-control" value="1" />
-          </div>
-        </div>
-        <div class="mt-3 d-flex justify-content-between">
-          <button class="btn btn-success w-25">Buy</button>
-          <button class="btn btn-danger w-25">Sell</button>
-        </div>
-      </form>
+    <div class="mt-3">
+      <strong>Margin:</strong> <span id="marginValue">0</span>
     </div>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      const email = localStorage.getItem("loggedInUser");
-      const userBalances = JSON.parse(localStorage.getItem("userBalances") || "{}");
-      const balance = userBalances[email] || 0;
-      $("#userInfo").text(`${email} | $${balance}`);
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const API_KEY = "d843bfa1fd38e34e4455935506f2aa61"; // Your Finnhub API key
+  const pairMapping = {
+    "XAUUSD": "XAUUSD",
+    "EURUSD": "FOREX_EURUSD",
+    "GBPUSD": "FOREX_GBPUSD",
+    "BTCUSD": "BINANCE:BTCUSDT",
+    "ETHUSD": "BINANCE:ETHUSDT",
+    "USDJPY": "FOREX_USDJPY",
+    "NZDUSD": "FOREX_NZDUSD",
+    "USDCAD": "FOREX_USDCAD"
+  };
 
-      let currentPrice = 3329.04; // initial demo price
-      let priceInterval;
+  let currentPair = "XAUUSD";
+  let trades = JSON.parse(localStorage.getItem("trades")) || [];
+  let user = JSON.parse(localStorage.getItem("user")) || {
+    email: "user@example.com",
+    balance: 10000
+  };
 
-      function simulatePriceChange() {
-        // simulate price fluctuation by random +/- 1%
-        const changePercent = (Math.random() * 2 - 1) / 100;
-        currentPrice = (currentPrice * (1 + changePercent)).toFixed(2);
-        $("#marketPrice").text(currentPrice);
+  // Show logged-in user email and balance
+  function updateUserDisplay() {
+    $("#userEmail").text(user.email);
+    $("#userBalance").text(`$${user.balance.toFixed(2)}`);
+  }
+
+  // Fetch real-time price from Finnhub
+  async function fetchPrice(symbol) {
+    try {
+      // Adjust symbol for Finnhub API
+      let apiSymbol = symbol;
+      if (symbol.startsWith("OANDA:")) {
+        apiSymbol = symbol.replace("OANDA:", "");
       }
-
-      $("#pairList li").on("click", function () {
-        const symbol = $(this).data("symbol");
-        const pair = $(this).text();
-        $("#chartFrame").attr("src", `https://www.tradingview.com/chart/?symbol=${symbol}`);
-        $("#pairTitle").text(pair);
-        $("#marketPrice").text("Loading...");
-
-        // reset price simulation
-        clearInterval(priceInterval);
-        currentPrice = 100; // reset to base price for demo
-        setTimeout(() => {
-          $("#marketPrice").text(currentPrice);
-          priceInterval = setInterval(simulatePriceChange, 2000);
-        }, 1000);
-      });
-
-      // Start price simulation on page load
-      priceInterval = setInterval(simulatePriceChange, 2000);
-    });
-
-    function logout() {
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "login.html";
+      if (pairMapping[symbol]) {
+        apiSymbol = pairMapping[symbol];
+      }
+      const url = `https://finnhub.io/api/v1/quote?symbol=${apiSymbol}&token=${API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.c; // current price
+    } catch (err) {
+      console.error("Price fetch error", err);
+      return null;
     }
-  </script>
+  }
+
+  // Update market price UI
+  async function updateMarketPrice() {
+    const price = await fetchPrice(currentPair);
+    if (price) {
+      $("#marketPrice").text(price.toFixed(4));
+      updateTrades(price);
+    } else {
+      $("#marketPrice").text("Error");
+    }
+  }
+
+  // Update all trades profit/loss and margin based on current price
+  function updateTrades(currentPrice) {
+    let margin = 0;
+    let tbody = $("#tradeHistory tbody");
+    tbody.empty();
+    trades.forEach((trade, index) => {
+      const directionFactor = trade.direction === "Buy" ? 1 : -1;
+      const profitLoss = (currentPrice - trade.openPrice) * directionFactor * trade.lots * trade.multiplier;
+      margin += trade.margin || 0;
+      user.balance += profitLoss; // update user balance - careful, better handle on close
+      const profitLossFormatted = profitLoss.toFixed(2);
+
+      const row = `<tr>
+        <td>${trade.pair}</td>
+        <td>${trade.direction}</td>
+        <td>${trade.lots}</td>
+        <td>${trade.openPrice.toFixed(4)}</td>
+        <td>${currentPrice.toFixed(4)}</td>
+        <td style="color:${profitLoss >= 0 ? 'green' : 'red'}">${profitLossFormatted}</td>
+        <td><button class="btn btn-sm btn-danger closeTradeBtn" data-index="${index}">Close</button></td>
+      </tr>`;
+      tbody.append(row);
+    });
+    $("#marginValue").text(margin.toFixed(2));
+    updateUserDisplay();
+  }
+
+  // Close trade button handler
+  $(document).on("click", ".closeTradeBtn", function() {
+    const index = $(this).data("index");
+    const trade = trades[index];
+
+    // Adjust balance for profit/loss on close
+    fetchPrice(trade.pair).then(currentPrice => {
+      const directionFactor = trade.direction === "Buy" ? 1 : -1;
+      const profitLoss = (currentPrice - trade.openPrice) * directionFactor * trade.lots * trade.multiplier;
+      user.balance += profitLoss;
+
+      trades.splice(index, 1);
+      saveTrades();
+      updateUserDisplay();
+      updateTradeTable();
+    });
+  });
+
+  function saveTrades() {
+    localStorage.setItem("trades", JSON.stringify(trades));
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+
+  function updateTradeTable() {
+    fetchPrice(currentPair).then(price => {
+      updateTrades(price);
+    });
+  }
+
+  // On pair click, update chart and price
+  $("#pairList li").on("click", function () {
+    const symbol = $(this).data("symbol");
+    currentPair = symbol.replace("OANDA:", "") || symbol;
+    $("#chartFrame").attr("src", `https://www.tradingview.com/chart/?symbol=${symbol}`);
+    $("#pairTitle").text($(this).text());
+    updateTradeTable();
+  });
+
+  // Buy or Sell button handler
+  $("#buyBtn, #sellBtn").on("click", async function () {
+    const direction = this.id === "buyBtn" ? "Buy" : "Sell";
+    const lots = parseFloat($("#lots").val());
+    const multiplier = parseFloat($("#multiplier").val()) || 1;
+    const openPrice = parseFloat($("#marketPrice").text());
+    if (isNaN(lots) || lots <= 0 || isNaN(openPrice)) {
+      alert("Please enter valid lots and check market price");
+      return;
+    }
+
+    const trade = {
+      pair: $("#pairTitle").text(),
+      direction,
+      lots,
+      openPrice,
+      multiplier,
+      margin: lots * multiplier * 0.01, // example margin calc
+      openTime: new Date().toISOString(),
+    };
+
+    trades.push(trade);
+    saveTrades();
+    updateTradeTable();
+    alert(`Trade ${direction} ${trade.pair} opened!`);
+  });
+
+  // Initial page load
+  $(document).ready(() => {
+    // Load user from localStorage or default
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      user = savedUser;
+    } else {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+    updateUserDisplay();
+    updateMarketPrice();
+    // Update market price every 15 seconds
+    setInterval(updateMarketPrice, 15000);
+  });
+</script>
 </body>
 </html>
