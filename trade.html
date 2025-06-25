@@ -87,6 +87,9 @@
     .sell {
       background: #ff4b4b;
     }
+    .close {
+      background: #666;
+    }
   </style>
 </head>
 <body>
@@ -118,6 +121,7 @@
       <div class="actions">
         <button class="buy">Buy</button>
         <button class="sell">Sell</button>
+        <button class="close">Close Trade</button>
       </div>
     </div>
   </div>
@@ -153,8 +157,15 @@
       activeTrade.textContent = `${type} ${currentPair}`;
     }
 
+    function closeTrade() {
+      activeTrade.textContent = "None";
+      marginDisplay.textContent = "$0.00";
+      marginDisplay.style.color = "#0055ff";
+    }
+
     document.querySelector(".buy").addEventListener("click", () => openTrade("Buy"));
     document.querySelector(".sell").addEventListener("click", () => openTrade("Sell"));
+    document.querySelector(".close").addEventListener("click", closeTrade);
   </script>
 </body>
 </html>
