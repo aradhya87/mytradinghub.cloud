@@ -1,68 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard - MyTradingHub</title>
-<link rel="icon" href="favicon.ico" />
-<link rel="stylesheet" href="style.css" />
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f9ff;
-    margin: 0;
-    padding: 40px 20px;
-    color: #0d1b37;
-  }
-  .dashboard-container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 30px;
-    border-radius: 14px;
-    box-shadow: 0 3px 15px rgba(0 85 255 / 0.2);
-    text-align: center;
-  }
-  h1 {
-    color: #0055ff;
-    margin-bottom: 25px;
-    font-weight: 700;
-  }
-  .btn-group {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-    gap: 15px;
-  }
-  .btn-group button {
-    padding: 14px;
-    font-weight: 600;
-    font-size: 1rem;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: #0055ff;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-  .btn-group button:hover {
-    background-color: #003bb5;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f6ff;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: #001d4a;
+      color: white;
+      padding: 20px;
+    }
+    .sidebar h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+    .sidebar input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: none;
+    }
+    .pair-list button {
+      display: block;
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 10px;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+    }
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu {
+      position: relative;
+    }
+    .menu-btn {
+      background: #0055ff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .dropdown a {
+      display: block;
+      padding: 10px 16px;
+      text-decoration: none;
+      color: #333;
+    }
+    .dropdown a:hover {
+      background: #f0f0f0;
+    }
+    canvas {
+      max-width: 100%;
+    }
+    .trade-actions {
+      margin-top: 20px;
+    }
+    .trade-actions input {
+      padding: 10px;
+      margin: 5px;
+      width: 100px;
+    }
+    .trade-result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .history {
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <h1>Welcome to Your Dashboard</h1>
-    <div class="btn-group">
-      <button onclick="alert('Deposit clicked')">Deposit</button>
-      <button onclick="alert('Withdrawal clicked')">Withdrawal</button>
-      <button onclick="alert('Wallet clicked')">Wallet</button>
-      <button onclick="window.location.href='verify.html'">Real Name Verification</button>
-      <button onclick="alert('Invite Friends clicked')">Invite Friends</button>
-      <button onclick="alert('Change Password clicked')">Change Password</button>
-      <button onclick="alert('Announcement clicked')">Announcement</button>
-      <button onclick="alert('Online Service clicked')">Online Service</button>
-      <button onclick="window.location.href='login.html'">Logout</button>
+  <div class="sidebar">
+    <h2>TradingHub</h2>
+    <input type="text" id="search" placeholder="Search pairs..." oninput="filterPairs()">
+    <div class="pair-list" id="pairList">
+      <button onclick="loadChart('BTCUSD')">BTCUSD</button>
+      <button onclick="loadChart('ETHUSD')">ETHUSD</button>
+      <button onclick="loadChart('EURUSD')">EURUSD</button>
+      <button onclick="loadChart('XAUUSD')">XAUUSD</button>
     </div>
   </div>
+  <div class="main-content">
+    <div class="header">
+      <h2>Dashboard</h2>
+      <div class="menu">
+        <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+        <div class="dropdown" id="dropdown">
+          <a href="deposit.html">Deposit</a>
+          <a href="withdrawal.html">Withdrawal</a>
+          <a href="wallet.html">Wallet</a>
+          <a href="verify.html">Real Name Verification</a>
+          <a href="invite.html">Invite Friends</a>
+          <a href="changepassword.html">Change Password</a>
+          <a href="announcement.html">Announcement</a>
+          <a href="support.html">Online Service</a>
+          <a href="index.html">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="selectedPair">Selected Pair: BTCUSD</h3>
+    <canvas id="chart" height="120"></canvas>
+
+    <div class="trade-actions">
+      <input type="number" id="lots" placeholder="Lots" />
+      <button onclick="trade('buy')">Buy</button>
+      <button onclick="trade('sell')">Sell</button>
+    </div>
+    <div class="trade-result" id="result"></div>
+
+    <div class="history">
+      <h4>Past 7 Days History</h4>
+      <ul>
+        <li>Buy BTCUSD - Profit: +5%</li>
+        <li>Sell ETHUSD - Loss: -2%</li>
+        <li>Buy EURUSD - Profit: +3%</li>
+        <li>Sell XAUUSD - Profit: +1%</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let currentPair = 'BTCUSD';
+    const chart = new Chart(document.getElementById('chart'), {
+      type: 'line',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'Price',
+          data: [40000, 40500, 39800, 41000, 42000, 41800, 43000],
+          borderColor: '#0055ff',
+          fill: false
+        }]
+      }
+    });
+
+    function loadChart(pair) {
+      currentPair = pair;
+      document.getElementById('selectedPair').textContent = 'Selected Pair: ' + pair;
+      chart.data.datasets[0].data = chart.data.datasets[0].data.map(v => v * (Math.random() * 0.1 + 0.95));
+      chart.update();
+    }
+
+    function trade(type) {
+      const lots = document.getElementById('lots').value;
+      if (!lots || lots <= 0) {
+        alert('Enter valid lot size');
+        return;
+      }
+      const result = (Math.random() * 2 - 1).toFixed(2);
+      document.getElementById('result').textContent = `${type.toUpperCase()} ${currentPair} → Margin: ${result}%`;
+    }
+
+    function filterPairs() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const buttons = document.querySelectorAll('#pairList button');
+      buttons.forEach(btn => {
+        btn.style.display = btn.textContent.toLowerCase().includes(search) ? 'block' : 'none';
+      });
+    }
+
+    function toggleMenu() {
+      const drop = document.getElementById('dropdown');
+      drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
 </body>
 </html>
