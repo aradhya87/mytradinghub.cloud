@@ -3,195 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyTradingHub - Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6fa;
-    }
-    .sidebar {
-      width: 250px;
-      background: #ffffff;
-      height: 100vh;
-      position: fixed;
-      overflow-y: auto;
-      border-right: 1px solid #ddd;
-    }
-    .main-content {
-      margin-left: 250px;
-      padding: 20px;
-    }
-    .account-dropdown {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      cursor: pointer;
-    }
-    .dropdown-menu {
-      right: 0;
-      left: auto;
-    }
-    .trade-panel, .chart-container, .history-container {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .list-group-item {
-      cursor: pointer;
-    }
-    #tradeStatus {
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .btn-sm {
-      font-size: 0.8rem;
-      padding: 0.25rem 0.5rem;
-    }
-  </style>
+  <title>Deposit Instructions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <div class="sidebar p-3">
-    <h5>Forex Pairs</h5>
-    <ul class="list-group" id="pairList">
-      <li class="list-group-item" data-symbol="OANDA:XAUUSD">XAUUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:EURUSD">EURUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:GBPUSD">GBPUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:BTCUSD">BTCUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:ETHUSD">ETHUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:USDJPY">USDJPY</li>
-      <li class="list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
-    </ul>
-  </div>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center">Deposit Instructions</h2>
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5>Step-by-step Instructions:</h5>
+        <ol>
+          <li>Select your country from the list below</li>
+          <li>Follow the local deposit instructions</li>
+          <li>After transfer, send your transaction ID to support</li>
+        </ol>
 
-  <div class="main-content">
-    <div class="d-flex justify-content-between">
-      <div>
-        <button class="btn btn-secondary btn-sm" onclick="resetTrades()">Reset Trades</button>
-        <button class="btn btn-info btn-sm" onclick="switchAccountType()" id="accountTypeBtn">Switch to Real Account</button>
-      </div>
-      <div class="dropdown account-dropdown">
-        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" id="userDropdown" aria-expanded="false">Loading...</button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Deposit</a></li>
-          <li><a class="dropdown-item" href="#">Wallet</a></li>
-          <li><a class="dropdown-item" href="#">Real Name Verification</a></li>
-          <li><a class="dropdown-item" href="#">Change Password</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+        <h5 class="mt-4">Available Country Options:</h5>
+        <ul>
+          <li><strong>India:</strong> UPI / Net Banking (Send ₹ to UPI ID: <code>mytrading@upi</code>)</li>
+          <li><strong>Pakistan:</strong> Easypaisa / JazzCash (Account: <code>0312-0000000</code>)</li>
+          <li><strong>UAE:</strong> Bank Transfer (IBAN: <code>AE000123456789</code>)</li>
+          <li><strong>Other Countries:</strong> Use Crypto Wallet: <code>BTC Wallet: xyz123abc</code></li>
         </ul>
+
+        <p class="mt-3">Once deposit is done, wait for admin approval to update your account balance.</p>
       </div>
     </div>
-
-    <div class="chart-container">
-      <iframe id="chartFrame" src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=1&theme=Light&style=1" width="100%" height="400" frameborder="0"></iframe>
+    <div class="text-center mt-4">
+      <a href="dashboard.html" class="btn btn-primary">Back to Dashboard</a>
     </div>
-
-    <div class="trade-panel">
-      <h5 id="pairTitle">XAUUSD</h5>
-      <p><strong>Market Price:</strong> <span id="marketPrice">3329.04</span></p>
-      <form id="tradeForm">
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label>Multiplier</label>
-            <input type="number" class="form-control" id="multiplier" value="100">
-          </div>
-          <div class="col-md-3">
-            <label>Set Loss</label>
-            <input type="number" class="form-control" id="setLoss" value="0">
-          </div>
-          <div class="col-md-3">
-            <label>Take Profit</label>
-            <input type="number" class="form-control" id="takeProfit" value="0">
-          </div>
-          <div class="col-md-3">
-            <label>Lots (Step: 0.01)</label>
-            <input type="number" class="form-control" id="lots" value="1">
-          </div>
-        </div>
-        <div class="mt-3 d-flex justify-content-between">
-          <button type="button" class="btn btn-success w-25" onclick="executeTrade('buy')">Buy</button>
-          <button type="button" class="btn btn-danger w-25" onclick="executeTrade('sell')">Sell</button>
-        </div>
-      </form>
-    </div>
-
-    <div id="tradeStatus" class="history-container"></div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const email = localStorage.getItem("userEmail") || "guest@trade.com";
-    let isAdmin = email === "admin@mytradinghub.cloud";
-    let isRealAccount = JSON.parse(localStorage.getItem("realAccount")) || false;
-
-    let balances = JSON.parse(localStorage.getItem("userBalances") || "{}");
-    if (!balances[email]) balances[email] = 10000;
-    let trades = JSON.parse(localStorage.getItem("userTrades") || "[]");
-
-    document.getElementById("userDropdown").innerHTML = isAdmin ? `${email} | $<span id='userBalance'>${balances[email].toFixed(2)}</span>` : email;
-    document.getElementById("accountTypeBtn").innerText = isRealAccount ? "Switch to Simulated Account" : "Switch to Real Account";
-
-    function updateTradeHistory() {
-      document.getElementById("tradeStatus").innerHTML = "";
-      let now = Date.now();
-      let recent = trades.filter(t => now - new Date(t.time).getTime() < 7 * 24 * 60 * 60 * 1000);
-      recent.reverse().forEach((t, index) => {
-        const html = `<p><strong>${t.type.toUpperCase()}</strong> | Lots: ${t.lots} | Entry: ${t.price.toFixed(2)} | Margin: $${t.margin.toFixed(2)} | P/L: $${t.result} | Time: ${t.time} <button class='btn btn-danger btn-sm' onclick='closePosition(${index})'>Close</button></p>`;
-        $('#tradeStatus').append(html);
-      });
-    }
-
-    function executeTrade(type) {
-      const lots = parseFloat(document.getElementById('lots').value) || 1;
-      const multiplier = parseFloat(document.getElementById('multiplier').value) || 100;
-      const margin = lots * multiplier;
-      const entryPrice = Math.random() * (3330 - 3310) + 3310;
-      const result = (Math.random() * 10 - 5).toFixed(2);
-      const now = new Date().toLocaleString();
-      const tradeData = { type, lots, margin, price: entryPrice, result, time: now };
-      trades.push(tradeData);
-      localStorage.setItem("userTrades", JSON.stringify(trades));
-
-      balances[email] += parseFloat(result);
-      localStorage.setItem("userBalances", JSON.stringify(balances));
-      document.getElementById("userBalance") && (document.getElementById("userBalance").innerText = balances[email].toFixed(2));
-      updateTradeHistory();
-    }
-
-    function closePosition(index) {
-      trades.splice(index, 1);
-      localStorage.setItem("userTrades", JSON.stringify(trades));
-      updateTradeHistory();
-    }
-
-    function resetTrades() {
-      trades = [];
-      localStorage.setItem("userTrades", JSON.stringify([]));
-      updateTradeHistory();
-    }
-
-    function switchAccountType() {
-      isRealAccount = !isRealAccount;
-      localStorage.setItem("realAccount", JSON.stringify(isRealAccount));
-      location.reload();
-    }
-
-    $('#pairList li').on('click', function() {
-      const symbol = $(this).data('symbol');
-      const pair = $(this).text();
-      $('#chartFrame').attr('src', `https://s.tradingview.com/widgetembed/?symbol=${symbol}&interval=1&theme=Light&style=1`);
-      $('#pairTitle').text(pair);
-      $('#marketPrice').text('Live...');
-    });
-
-    updateTradeHistory();
-  </script>
 </body>
 </html>
