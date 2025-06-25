@@ -250,7 +250,6 @@
 
 <header>
   <div class="logo-container" title="TradingHub - Your Forex Trading Platform">
-    <!-- Binance style trading logo SVG -->
     <svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 2.8 9.2 5.6 10.6 7 13.4 4.2 12 2.8ZM5 10.7 3.6 9.3 0 13 5 18 8.3 14.7 6.9 13.3 9.7 10.5 7.9 8.7 5 10.7Zm14 0-2.8 2.8 1.4 1.4 3.3-3.3-5-4.9-2.8 2.8 1.4 1.4-3.3 3.3 3.3 3.3-1.4 1.4-3.3-3.3-3.3 3.3-1.4-1.4 3.3-3.3-1.4-1.4-2.8 2.8-5 4.9 3.3 3.3 1.4-1.4 2.8-2.8-1.4-1.4 3.3-3.3 1.8 1.8 1.2 1.2 2.8-2.8 2.8 2.8 1.4-1.4 3.3-3.3-3.3-3.3Z"/>
     </svg>
@@ -280,7 +279,6 @@
       autocomplete="off"
     />
     <div id="currencyList" tabindex="0" role="listbox" aria-label="List of currency pairs" aria-live="polite">
-      <!-- Currency pairs buttons inserted here -->
     </div>
   </div>
   <div id="rightPanel" role="main">
@@ -312,7 +310,7 @@
   // Your API key
   const apiKey = 'a58af8d2469c4c63a44dc133a2c28481';
 
-  // This endpoint gives all forex pairs available on Twelve Data API
+  // Twelve Data forex pairs endpoint
   const allPairsUrl = `https://api.twelvedata.com/forex_pairs?apikey=${apiKey}`;
 
   let allPairs = [];
@@ -325,6 +323,7 @@
   const searchInput = document.getElementById('searchInput');
   const pairTitle = document.getElementById('pairTitle');
 
+  // Create button for each currency pair
   function createPairButton(pair) {
     const btn = document.createElement('button');
     btn.textContent = pair.symbol;
@@ -334,7 +333,7 @@
       if (selectedPair !== pair.symbol) {
         selectedPair = pair.symbol;
         updateSelectedButton();
-        updateChart(selectedPair);
+        fetchAndUpdateChart(selectedPair);
       }
     });
     return btn;
@@ -342,8 +341,9 @@
 
   function updateSelectedButton() {
     Array.from(currencyList.children).forEach(btn => {
-      btn.setAttribute('aria-selected', btn.textContent === selectedPair ? 'true' : 'false');
-      btn.classList.toggle('active', btn.textContent === selectedPair);
+      const isSelected = btn.textContent === selectedPair;
+      btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      btn.classList.toggle('active', isSelected);
     });
   }
 
@@ -388,7 +388,6 @@
   function fetchAndUpdateChart(symbol) {
     if (chartInterval) clearInterval(chartInterval);
 
-    // Format symbol: Twelve Data expects pairs like EUR/USD or EURUSD depending on endpoint
     const symbolFormatted = symbol.replace('/', '');
 
     const url = `https://api.twelvedata.com/time_series?symbol=${symbolFormatted}&interval=1min&outputsize=100&apikey=${apiKey}`;
@@ -397,10 +396,12 @@
       .then(res => res.json())
       .then(data => {
         if (data.values) {
-          const points = data.values.map(candle => ({
-            time: Math.floor(new Date(candle.datetime).getTime() / 1000),
-            value: parseFloat(candle.close),
-          })).reverse();
+          const points = data.values
+            .map(candle => ({
+              time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+              value: parseFloat(candle.close),
+            }))
+            .reverse();
 
           lineSeries.setData(points);
           pairTitle.textContent = `${symbol} Live Chart`;
@@ -414,16 +415,17 @@
         pairTitle.textContent = `${symbol} - Error loading data`;
       });
 
-    // Update every 60 seconds
     chartInterval = setInterval(() => {
       fetch(url)
         .then(res => res.json())
         .then(data => {
           if (data.values) {
-            const points = data.values.map(candle => ({
-              time: Math.floor(new Date(candle.datetime).getTime() / 1000),
-              value: parseFloat(candle.close),
-            })).reverse();
+            const points = data.values
+              .map(candle => ({
+                time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+                value: parseFloat(candle.close),
+              }))
+              .reverse();
 
             lineSeries.setData(points);
             pairTitle.textContent = `${symbol} Live Chart`;
@@ -445,7 +447,7 @@
       fetchAndUpdateChart(selectedPair);
     } else {
       pairTitle.textContent = 'No matching pairs found';
-      lineSeries.setData([]);
+      if (lineSeries) lineSeries.setData([]);
     }
   });
 
@@ -456,29 +458,28 @@
     }
   });
 
-  // Initialize
-  initChart();
-
-  // Fetch all pairs from API on load
-  fetch(allPairsUrl)
-    .then(res => res.json())
-    .then(data => {
-      if (data.data) {
-        allPairs = data.data.map(pair => ({ symbol: pair.symbol }));
-        renderPairs(allPairs);
-
-        if (allPairs.length > 0) {
-          selectedPair = allPairs[0].symbol;
-          updateSelectedButton();
-          fetchAndUpdateChart(selectedPair);
+  // Initialize chart and load pairs on page load
+  window.onload = () => {
+    initChart();
+    fetch(allPairsUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.data) {
+          allPairs = data.data.map(pair => ({ symbol: pair.symbol }));
+          renderPairs(allPairs);
+          if (allPairs.length > 0) {
+            selectedPair = allPairs[0].symbol;
+            updateSelectedButton();
+            fetchAndUpdateChart(selectedPair);
+          }
+        } else {
+          pairTitle.textContent = 'Unable to load currency pairs';
         }
-      } else {
-        pairTitle.textContent = 'Unable to load currency pairs';
-      }
-    })
-    .catch(() => {
-      pairTitle.textContent = 'Error fetching currency pairs';
-    });
+      })
+      .catch(() => {
+        pairTitle.textContent = 'Error fetching currency pairs';
+      });
+  };
 </script>
 
 </body>
