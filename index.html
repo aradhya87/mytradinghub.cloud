@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TradingHub - Login & Trading</title>
+<title>TradingHub - Your Trading Platform</title>
 <style>
-  /* Basic reset */
   * {
     margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif;
   }
@@ -23,10 +22,42 @@
     width: 360px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.6);
   }
-  h2 {
-    margin-bottom: 20px;
-    text-align: center;
+  h1, h2 {
     font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  h1.logo {
+    font-size: 32px;
+    letter-spacing: 2px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 30px;
+    border: none;
+    background: #00c6ff;
+    color: #003366;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 15px;
+  }
+  button:hover {
+    background: #0077ff;
+    color: #fff;
+  }
+  .small-link {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #99ddff;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .small-link:hover {
+    text-decoration: underline;
   }
   label {
     display: block;
@@ -44,33 +75,6 @@
     margin-bottom: 15px;
     font-size: 16px;
   }
-  button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 30px;
-    border: none;
-    background: #00c6ff;
-    color: #003366;
-    font-weight: 700;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  button:hover {
-    background: #0077ff;
-    color: #fff;
-  }
-  .small-link {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #99ddff;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-  }
-  .small-link:hover {
-    text-decoration: underline;
-  }
   #otpDisplay {
     background: #0077ff;
     padding: 8px 14px;
@@ -82,7 +86,7 @@
     margin-bottom: 15px;
     user-select: all;
   }
-  #errorMsg {
+  #errorMsg, #errorMsgOtp, #errorMsgLogin {
     background: #ff4444;
     padding: 8px 14px;
     border-radius: 8px;
@@ -221,7 +225,17 @@
 </head>
 <body>
 
-<div id="container">
+<!-- Homepage container -->
+<div id="homepage" style="max-width: 500px; text-align:center;">
+  <h1 class="logo">TradingHub</h1>
+  <p style="font-size: 18px; margin-bottom: 25px;">
+    Your live trading platform with real-time currency charts and trading pairs.
+  </p>
+  <button id="btnGoLogin">Log In</button>
+  <button id="btnGoSignup">Sign Up</button>
+</div>
+
+<div id="container" style="display:none;">
 
   <!-- Signup / Login forms container -->
   <div id="authContainer">
@@ -268,7 +282,7 @@
 </div>
 
 <!-- Trading page -->
-<div id="tradingPage" role="main" aria-label="Trading dashboard">
+<div id="tradingPage" role="main" aria-label="Trading dashboard" style="display:none;">
 
   <div id="tradingHeader">
     <h1>TradingHub</h1>
@@ -317,6 +331,10 @@
   }
 
   // Elements
+  const homepage = document.getElementById('homepage');
+  const btnGoLogin = document.getElementById('btnGoLogin');
+  const btnGoSignup = document.getElementById('btnGoSignup');
+  const container = document.getElementById('container');
   const signupForm = document.getElementById('signupForm');
   const otpForm = document.getElementById('otpForm');
   const loginForm = document.getElementById('loginForm');
@@ -331,25 +349,37 @@
   const buyBtn = document.getElementById('buyBtn');
   const sellBtn = document.getElementById('sellBtn');
 
-  // API key for live forex pairs and chart
-  const apiKey = 'a58af8d2469c4c63a44dc133a2c28481';
-
   // Variables to hold state
   let generatedOtp = null;
   let userData = {}; // To hold signup data temporarily
-  let allPairs = [];
+  let allPairs = [
+    { symbol: 'EUR/USD' },
+    { symbol: 'USD/JPY' },
+    { symbol: 'GBP/USD' },
+    { symbol: 'USD/CHF' },
+    { symbol: 'AUD/USD' },
+    { symbol: 'USD/CAD' },
+    { symbol: 'NZD/USD' },
+    { symbol: 'EUR/GBP' },
+    { symbol: 'EUR/JPY' },
+    { symbol: 'GBP/JPY' }
+  ];
   let chart, lineSeries;
   let chartInterval = null;
   let selectedPair = null;
 
   // Show login form
   function showLogin() {
+    homepage.style.display = 'none';
+    container.style.display = 'block';
     signupForm.style.display = 'none';
     otpForm.style.display = 'none';
     loginForm.style.display = 'block';
   }
   // Show signup form
   function showSignup() {
+    homepage.style.display = 'none';
+    container.style.display = 'block';
     signupForm.style.display = 'block';
     otpForm.style.display = 'none';
     loginForm.style.display = 'none';
@@ -362,20 +392,22 @@
   }
   // Show trading page
   function showTrading() {
-    authContainer.style.display = 'none';
+    container.style.display = 'none';
+    homepage.style.display = 'none';
     tradingPage.style.display = 'block';
   }
-  // Show auth forms container
-  function showAuth() {
-    authContainer.style.display = 'block';
+  // Show homepage
+  function showHomepage() {
+    container.style.display = 'none';
     tradingPage.style.display = 'none';
+    homepage.style.display = 'block';
   }
 
   // OTP resend button
   document.getElementById('resendOtp').onclick = () => {
     generatedOtp = generateOTP();
     otpDisplay.textContent = generatedOtp;
-    showError('errorMsgOtp', ''); 
+    showError('errorMsgOtp', '');
   };
 
   // Navigation links
@@ -452,40 +484,9 @@
   // Logout button
   logoutBtn.onclick = () => {
     userData = {};
-    showAuth();
     clearChartInterval();
+    showHomepage();
   };
-
-  // Fetch all currency pairs for Forex from 12Data API
-  async function fetchPairs() {
-    try {
-      const res = await fetch(`https://api.twelvedata.com/forex_pairs?apikey=${apiKey}`);
-      const json = await res.json();
-      if (json.data) {
-        allPairs = json.data.map(pair => ({ symbol: pair.symbol }));
-      } else {
-        allPairs = [
-          { symbol: 'EUR/USD' },
-          { symbol: 'USD/JPY' },
-          { symbol: 'GBP/USD' },
-          { symbol: 'USD/CHF' },
-          { symbol: 'AUD/USD' },
-          { symbol: 'USD/CAD' },
-          { symbol: 'NZD/USD' }
-        ]; // fallback pairs
-      }
-    } catch {
-      allPairs = [
-        { symbol: 'EUR/USD' },
-        { symbol: 'USD/JPY' },
-        { symbol: 'GBP/USD' },
-        { symbol: 'USD/CHF' },
-        { symbol: 'AUD/USD' },
-        { symbol: 'USD/CAD' },
-        { symbol: 'NZD/USD' }
-      ];
-    }
-  }
 
   // Create currency list buttons
   function createPairButton(pair) {
@@ -503,51 +504,61 @@
     return btn;
   }
 
-  function updateSelectedButton() {
-    Array.from(currencyList.children).forEach(btn => {
-      const isSelected = btn.textContent === selectedPair;
-      btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-      btn.classList.toggle('active', isSelected);
-    });
-  }
-
-  // Render currency buttons
-  function renderPairs(pairsToShow) {
+  // Render pairs filtered or all
+  function renderPairs(pairs) {
     currencyList.innerHTML = '';
-    pairsToShow.forEach(pair => {
-      const btn = createPairButton(pair);
-      currencyList.appendChild(btn);
+    pairs.forEach(pair => {
+      currencyList.appendChild(createPairButton(pair));
+    });
+    updateSelectedButton();
+  }
+
+  // Update selected button highlight
+  function updateSelectedButton() {
+    const buttons = currencyList.querySelectorAll('button');
+    buttons.forEach(btn => {
+      btn.setAttribute('aria-selected', btn.textContent === selectedPair ? 'true' : 'false');
+      if (btn.textContent === selectedPair) {
+        btn.classList.add('active');
+        btn.focus();
+      } else {
+        btn.classList.remove('active');
+      }
     });
   }
 
-  // Filter currency pairs by search term
-  function filterPairs(term) {
-    if (!term) return allPairs;
-    const lower = term.toLowerCase();
-    return allPairs.filter(p => p.symbol.toLowerCase().includes(lower));
+  // Filter pairs based on search text
+  function filterPairs(query) {
+    if (!query) return allPairs;
+    return allPairs.filter(pair => pair.symbol.toLowerCase().includes(query.toLowerCase()));
   }
 
-  // Initialize TradingView lightweight chart
+  // Initialize Lightweight Charts
   function initChart() {
+    if (chart) {
+      chart.remove();
+      chart = null;
+    }
     const chartContainer = document.getElementById('chartContainer');
     chartContainer.innerHTML = '';
-
     chart = LightweightCharts.createChart(chartContainer, {
       width: chartContainer.clientWidth,
       height: chartContainer.clientHeight,
       layout: {
-        backgroundColor: '#ffffff',
-        textColor: '#000000',
+        backgroundColor: '#000000',
+        textColor: '#eeeeee',
       },
       grid: {
-        vertLines: { color: '#eee' },
-        horzLines: { color: '#eee' },
+        vertLines: { color: '#444444' },
+        horzLines: { color: '#444444' },
       },
-      timeScale: { timeVisible: true, secondsVisible: false },
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+      },
     });
-
     lineSeries = chart.addLineSeries({
-      color: '#0077ff',
+      color: '#00c6ff',
       lineWidth: 2,
     });
   }
@@ -561,60 +572,31 @@
   function fetchAndUpdateChart(symbol) {
     clearChartInterval();
 
-    const symbolFormatted = symbol.replace('/', '');
+    // Since no API key now, create demo random data for chart
+    const points = [];
+    const now = Math.floor(Date.now() / 1000);
+    let price = 1.0 + Math.random() * 0.5;
+    for (let i = 60; i >= 0; i--) {
+      price += (Math.random() - 0.5) * 0.01;
+      points.push({ time: now - i * 60, value: Number(price.toFixed(4)) });
+    }
+    lineSeries.setData(points);
+    pairTitle.textContent = `${symbol} Live Chart (Demo Data)`;
 
-    const url = `https://api.twelvedata.com/time_series?symbol=${symbolFormatted}&interval=1min&outputsize=100&apikey=${apiKey}`;
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if (data.values) {
-          const points = data.values
-            .map(candle => ({
-              time: Math.floor(new Date(candle.datetime).getTime() / 1000),
-              value: parseFloat(candle.close),
-            }))
-            .reverse();
-
-          lineSeries.setData(points);
-          pairTitle.textContent = `${symbol} Live Chart`;
-        } else {
-          lineSeries.setData([]);
-          pairTitle.textContent = `${symbol} - No Data`;
-        }
-      })
-      .catch(() => {
-        lineSeries.setData([]);
-        pairTitle.textContent = `${symbol} - Error loading data`;
-      });
-
+    // Update chart every minute with new random data
     chartInterval = setInterval(() => {
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          if (data.values) {
-            const points = data.values
-              .map(candle => ({
-                time: Math.floor(new Date(candle.datetime).getTime() / 1000),
-                value: parseFloat(candle.close),
-              }))
-              .reverse();
-
-            lineSeries.setData(points);
-            pairTitle.textContent = `${symbol} Live Chart`;
-          }
-        })
-        .catch(() => {
-          lineSeries.setData([]);
-          pairTitle.textContent = `${symbol} - Error loading data`;
-        });
+      const last = points[points.length - 1];
+      let newPrice = last.value + (Math.random() - 0.5) * 0.01;
+      newPrice = Number(newPrice.toFixed(4));
+      points.shift();
+      points.push({ time: Math.floor(Date.now() / 1000), value: newPrice });
+      lineSeries.setData(points);
     }, 60000);
   }
 
   // Initialize chart and load pairs after login
   async function initChartAndPairs() {
     initChart();
-    await fetchPairs();
     renderPairs(allPairs);
     if (allPairs.length > 0) {
       selectedPair = allPairs[0].symbol;
@@ -645,10 +627,12 @@
     alert(`Sell order placed for ${selectedPair}`);
   });
 
-  // On page load show signup form
-  showSignup();
+  // Homepage buttons events
+  btnGoLogin.addEventListener('click', showLogin);
+  btnGoSignup.addEventListener('click', showSignup);
 
+  // On page load show homepage
+  showHomepage();
 </script>
-
 </body>
 </html>
