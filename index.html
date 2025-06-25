@@ -1,130 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyTradingHub - Trusted Forex Platform</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap">
-  <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif;
-    }
-    body {
-      background: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
-    }
-    header {
-      background: #003366;
-      color: white;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      font-size: 28px;
-      font-weight: 800;
-    }
-    nav a {
-      margin-left: 20px;
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .hero {
-      background: linear-gradient(to right, #0077ff, #00c6ff);
-      color: white;
-      text-align: center;
-      padding: 80px 20px;
-    }
-    .hero h2 {
-      font-size: 36px;
-      margin-bottom: 20px;
-    }
-    .hero p {
-      font-size: 18px;
-      margin-bottom: 30px;
-    }
-    .hero button {
-      padding: 12px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 30px;
-      background: white;
-      color: #003366;
-      font-weight: 700;
-      margin: 10px;
-      cursor: pointer;
-    }
-    .section {
-      padding: 60px 40px;
-      max-width: 1100px;
-      margin: auto;
-    }
-    .section h3 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .section p {
-      text-align: center;
-      font-size: 16px;
-      max-width: 800px;
-      margin: auto;
-    }
-    footer {
-      background: #003366;
-      color: white;
-      padding: 40px;
-      text-align: center;
-    }
-    footer p {
-      margin: 10px 0;
-      font-size: 14px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Trading Hub</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header class="header">
+    <div class="logo">MyTradingHub</div>
+    <nav class="nav">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Support</a>
+      <a href="#">FAQs</a>
+    </nav>
+  </header>
 
-<header>
-  <h1>TradingHub</h1>
-  <nav>
-    <a href="contact.html">Contact</a>
-    <a href="about.html">About</a>
-    <a href="support.html">Support</a>
-    <a href="faq.html">FAQs</a>
-    <a href="#login">Log In</a>
-    <a href="#signup">Open Account</a>
-  </nav>
-</header>
+  <div class="main-container">
+    <aside class="sidebar">
+      <h3>Markets</h3>
+      <ul>
+        <li>BTC/USDT</li>
+        <li>ETH/USDT</li>
+        <li>BNB/USDT</li>
+        <li>XRP/USDT</li>
+      </ul>
+    </aside>
 
-<section class="hero">
-  <h2>Trade Smarter with MyTradingHub</h2>
-  <p>Access global currency markets with advanced tools and live charts. Start your journey today with a secure and intuitive trading experience.</p>
-  <button onclick="location.href='#signup'">Open Account</button>
-  <button onclick="location.href='#login'">Log In</button>
-</section>
+    <section class="chart-area">
+      <div class="currency-info">
+        <h2>BTC/USDT</h2>
+        <p id="live-price">Price: $26750</p>
+        <p id="gain-loss">Gain: +1.25%</p>
+      </div>
+      <div class="chart-box">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=1&theme=light" frameborder="0"></iframe>
+      </div>
+      <div class="trade-buttons">
+        <button onclick="openTradeModal('buy')">Buy</button>
+        <button onclick="openTradeModal('sell')">Sell</button>
+      </div>
+    </section>
+  </div>
 
-<section class="section">
-  <h3>Trusted Forex Trading Platform</h3>
-  <p>We provide real-time market data, secure transactions, and 24/7 customer support to ensure your trading is always in safe hands. Our mission is to empower traders with transparency and speed.</p>
-</section>
+  <div id="trade-modal" class="modal hidden">
+    <div class="modal-content">
+      <span onclick="closeModal()" class="close">&times;</span>
+      <h3 id="modal-action">Trade</h3>
+      <label for="lot-size">Lot Size</label>
+      <input type="number" id="lot-size" value="1" min="1" />
+      <button onclick="confirmTrade()">Confirm</button>
+    </div>
+  </div>
 
-<section class="section">
-  <h3>Live Currency Charts & Market Insights</h3>
-  <p>Coming soon: View all major currency pairs with real-time charts, live price movements, and powerful tools to make informed trading decisions.</p>
-</section>
-
-<footer>
-  <p>SUITE 302 4 STATION SQUARE CAMBRIDGE UNITED KINGDOM CB1 2GE</p>
-  <p>This website is owned and operated by MyTradingHub</p>
-  <p>All contents &copy; 2025 . All rights reserved</p>
-</footer>
-
+  <script src="script.js"></script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 4a5b4410efafbb0e20d38ed5a85dd74f1b78bb9b
