@@ -1,96 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sign Up - MyTradingHub</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="style.css" />
-<style>
-  body {
-    background: #f5f9ff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #0d1b37;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  .signup-container {
-    background: white;
-    padding: 40px 35px;
-    border-radius: 14px;
-    box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
-    max-width: 420px;
-    width: 100%;
-    text-align: center;
-  }
-  .signup-container h2 {
-    color: #0055ff;
-    margin-bottom: 30px;
-    font-weight: 700;
-  }
-  form label {
-    display: block;
-    text-align: left;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  form input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-  }
-  form button {
-    width: 100%;
-    padding: 16px;
-    background: #0055ff;
-    border: none;
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  form button:hover {
-    background: #003bb5;
-  }
-  .login-link {
-    margin-top: 18px;
-    display: block;
-    color: #0055ff;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .login-link:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f5f9ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .signup-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0 85 255 / 0.2);
+      width: 100%;
+      max-width: 480px;
+    }
+    h2 {
+      text-align: center;
+      color: #0055ff;
+      margin-bottom: 24px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 10px;
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #0055ff;
+      color: white;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #otp-section {
+      display: none;
+      margin-top: 20px;
+    }
+    #otp-display {
+      font-weight: bold;
+      font-size: 1.5rem;
+      text-align: center;
+      margin: 10px 0;
+      color: #0b8f0b;
+    }
+  </style>
 </head>
 <body>
   <div class="signup-container">
-    <h2>Create Your Account</h2>
-    <form>
-      <label for="fullname">Full Name</label>
-      <input type="text" id="fullname" placeholder="Enter your full name" required />
-      
-      <label for="email">Email Address</label>
-      <input type="email" id="email" placeholder="Enter your email" required />
-      
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Create a password" required />
-      
-      <label for="confirm-password">Confirm Password</label>
-      <input type="password" id="confirm-password" placeholder="Confirm your password" required />
-      
-      <button type="submit">Sign Up</button>
+    <h2>Create Account</h2>
+    <form id="signup-form">
+      <label>Full Name</label>
+      <input type="text" id="fullname" required />
+
+      <label>Email Address</label>
+      <input type="email" id="email" required />
+
+      <label>Password</label>
+      <input type="password" id="password" required />
+
+      <label>Confirm Password</label>
+      <input type="password" id="confirm-password" required />
+
+      <button type="button" onclick="generateOTP()">Verify</button>
+
+      <div id="otp-section">
+        <div id="otp-display"></div>
+        <label>Enter OTP</label>
+        <input type="text" id="otp-input" />
+        <button type="button" onclick="validateOTP()">Submit OTP</button>
+      </div>
     </form>
-    <a href="login.html" class="login-link">Already have an account? Log In</a>
   </div>
-</body>
-</html>
+
+  <script>
+    <script>
+  let generatedOTP = "";
+
+  function generateOTP() {
+    const name = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value;
+    const confirmPass = document.getElementById("confirm-password").value;
+
+    if (!name || !email || !pass || !confirmPass) {
+      alert("Please fill all fields");
+      return;
+    }
+    if (pass !== confirmPass) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    // generate 6-digit OTP
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    document.getElementById("otp-display").textContent = "OTP: " + generatedOTP;
+    document.getElementById("otp-section").style.display = "block";
+  }
+
+  function validateOTP() {
+    const enteredOTP = document.getElementById("otp-input").value.trim();
+    if (enteredOTP === generatedOTP) {
+      alert("Verification successful");
+
+      // save user details in localStorage for login
+      localStorage.setItem("userName", document.getElementById("fullname").value);
+      localStorage.setItem("userEmail", document.getElementById("email").value);
+      localStorage.setItem("userPassword", document.getElementById("password").value);  // <== save password here
+
+      window.location.href = "userdetails.html";
+    } else {
+      alert("Incorrect OTP");
+    }
+  }
+</script>
