@@ -54,6 +54,8 @@
       font-size: 14px;
       vertical-align: middle;
     }
+    .profit-positive { color: green; font-weight: bold; }
+    .profit-negative { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -103,7 +105,6 @@
     <!-- Trade panel -->
     <div class="trade-panel">
       <h5 id="pairTitle">XAUUSD</h5>
-      <p><strong>Market Price:</strong> <span id="marketPrice">Live</span></p>
       <form id="tradeForm">
         <div class="row g-3">
           <div class="col-md-3">
@@ -119,8 +120,8 @@
             <input type="number" class="form-control" id="profit" value="0">
           </div>
           <div class="col-md-3">
-            <label>Lots (Step: 0.01)</label>
-            <input type="number" class="form-control" id="lots" value="1">
+            <label>Lots</label>
+            <input type="number" class="form-control" id="lots" value="1" step="0.01">
           </div>
         </div>
         <div class="mt-3 d-flex justify-content-between">
@@ -141,15 +142,11 @@
               <th>Reservation #</th>
               <th>Direction</th>
               <th>Lots</th>
-              <th>Lower Unit Price</th>
+              <th>Entry Price</th>
               <th>Current Price</th>
-              <th>Take Profit</th>
-              <th>Set Loss</th>
-              <th>Handling Fee</th>
-              <th>Margin</th>
               <th>Profit</th>
               <th>Open Time</th>
-              <th>Operation</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="tradeTableBody"></tbody>
@@ -160,93 +157,76 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const getStoredTrades = () => JSON.parse(localStorage.getItem('openTrades') || '[]');
+    let currentSymbol = "OANDA:XAUUSD";
+    let trades = JSON.parse(localStorage.getItem("openTrades") || "[]");
 
-    const saveTrades = (trades) => {
-      localStorage.setItem('openTrades', JSON.stringify(trades));
-    };
-
-    const loadTradesToTable = () => {
-      const trades = getStoredTrades();
-      const tbody = document.getElementById('tradeTableBody');
-      tbody.innerHTML = '';
-      trades.forEach(trade => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${trade.pair}</td>
-          <td>#${trade.reservation}</td>
-          <td>${trade.direction}</td>
-          <td>${trade.lots}</td>
-          <td>${trade.price}</td>
-          <td>${trade.currPrice}</td>
-          <td>${trade.takeProfit}</td>
-          <td>${trade.setLoss}</td>
-          <td>${trade.fee}</td>
-          <td>${trade.margin}</td>
-          <td>${trade.profit}</td>
-          <td>${trade.time}</td>
-          <td><button class='btn btn-sm btn-danger' onclick='closeTrade(${trade.reservation})'>Close</button></td>
-        `;
-        tbody.appendChild(row);
+    function updateProfits() {
+      trades.forEach((trade, i) => {
+        const price = Math.random() * 100 + 3000;
+        const profit = (trade.direction === 'Buy' ? (price - trade.entry) : (trade.entry - price)) * trade.lots * 10;
+        trades[i].profit = profit.toFixed(2);
+        trades[i].current = price.toFixed(2);
       });
-    };
-
-    function closeTrade(reservation) {
-      let trades = getStoredTrades();
-      trades = trades.filter(trade => trade.reservation !== reservation);
-      saveTrades(trades);
-      loadTradesToTable();
+      localStorage.setItem("openTrades", JSON.stringify(trades));
+      loadTrades();
     }
 
-    function openTrade(direction) {
-      const pair = $('#pairTitle').text();
-      const lots = parseFloat($('#lots').val());
-      const multiplier = parseFloat($('#multiplier').val());
-      const margin = (lots * multiplier).toFixed(2);
-      const price = (Math.random() * 1000 + 2000).toFixed(2);
-      const reservation = Math.floor(Math.random() * 90000) + 10000;
+    function loadTrades() {
+      const tbody = document.getElementById("tradeTableBody");
+      tbody.innerHTML = "";
+      trades.forEach(t => {
+        const row = `<tr>
+          <td>${t.pair}</td>
+          <td>#${t.id}</td>
+          <td>${t.direction}</td>
+          <td>${t.lots}</td>
+          <td>${t.entry}</td>
+          <td>${t.current || t.entry}</td>
+          <td class='${t.profit >= 0 ? "profit-positive" : "profit-negative"}'>$${t.profit}</td>
+          <td>${t.time}</td>
+          <td><button class='btn btn-sm btn-danger' onclick='closeTrade(${t.id})'>Close</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function openTrade(type) {
+      const lots = parseFloat(document.getElementById("lots").value);
+      const price = Math.random() * 100 + 3000;
+      const id = Math.floor(Math.random() * 90000 + 10000);
       const now = new Date().toLocaleString();
-      const balance = parseFloat(localStorage.getItem('userBalance') || '0.00');
-
-      const profit = direction === 'Buy' ? (lots * 11).toFixed(2) : (lots * -11).toFixed(2);
-      const updatedBalance = (balance + parseFloat(profit)).toFixed(2);
-      localStorage.setItem('userBalance', updatedBalance);
-
-      const trade = {
-        pair,
-        reservation,
-        direction,
+      trades.push({
+        id,
+        pair: document.getElementById("pairTitle").innerText,
+        direction: type,
         lots,
-        price,
-        currPrice: (parseFloat(price) + 0.28).toFixed(2),
-        takeProfit: 0,
-        setLoss: 0,
-        fee: 0,
-        margin,
-        profit,
+        entry: price.toFixed(2),
+        profit: "0.00",
         time: now
-      };
+      });
+      localStorage.setItem("openTrades", JSON.stringify(trades));
+      updateProfits();
+    }
 
-      const trades = getStoredTrades();
-      trades.push(trade);
-      saveTrades(trades);
-      loadTradesToTable();
-      $('#userBalance').text(updatedBalance);
+    function closeTrade(id) {
+      trades = trades.filter(t => t.id !== id);
+      localStorage.setItem("openTrades", JSON.stringify(trades));
+      loadTrades();
     }
 
     $(document).ready(function() {
       const email = localStorage.getItem("userEmail") || "guest@trade.com";
       const balance = localStorage.getItem("userBalance") || "0.00";
-      $('#userDropdown').html(`${email} | $<span id="userBalance">${balance}</span>`);
+      $('#userDropdown').html(`${email} | $<span id='userBalance'>${balance}</span>`);
 
       $('#pairList li').on('click', function() {
-        const symbol = $(this).data('symbol');
-        const pair = $(this).text();
-        $('#chartFrame').attr('src', `https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${symbol}&locale=en`);
-        $('#pairTitle').text(pair);
+        currentSymbol = $(this).data('symbol');
+        $('#chartFrame').attr('src', `https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${currentSymbol}&locale=en`);
+        $('#pairTitle').text($(this).text());
       });
 
-      loadTradesToTable();
+      loadTrades();
+      setInterval(updateProfits, 3000);
     });
   </script>
 </body>
