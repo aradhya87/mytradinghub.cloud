@@ -207,6 +207,61 @@
   #tradeButtons button:hover {
     background: #004aa3;
   }
+  /* Homepage styles */
+  #homepage {
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    color: white;
+  }
+  #homepage h1.logo {
+    text-align: left;
+    font-size: 36px;
+    margin-bottom: 15px;
+    letter-spacing: 3px;
+  }
+  #menuToggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 28px;
+    user-select: none;
+  }
+  #menuDropdown {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 15px;
+    background: #0077ff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 100;
+  }
+  #menuDropdown a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+    font-weight: 600;
+  }
+  #menuDropdown a:hover {
+    background: #005bb5;
+  }
+  #homepage p.description {
+    font-size: 18px;
+    margin: 25px 0;
+  }
+  #homepage .footer {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #ccc;
+    line-height: 1.5;
+    text-align: left;
+  }
+  #homepage .footer p {
+    margin-bottom: 10px;
+  }
   /* Responsive */
   @media (max-width: 960px) {
     #mainTrading {
@@ -225,16 +280,32 @@
 </head>
 <body>
 
-<!-- Homepage container -->
-<div id="homepage" style="max-width: 500px; text-align:center;">
+<!-- Homepage -->
+<div id="homepage" role="main" aria-label="Homepage">
   <h1 class="logo">TradingHub</h1>
-  <p style="font-size: 18px; margin-bottom: 25px;">
+
+  <!-- Menu toggle -->
+  <div id="menuToggle" aria-label="Open menu" role="button" tabindex="0">&#9776;</div>
+  <nav id="menuDropdown" aria-label="Main menu">
+    <a href="mailto:contact@mytradinghub.cloud" target="_blank" rel="noopener noreferrer">Contact Us</a>
+    <a href="#">Customer Support</a>
+    <a href="#">FAQs</a>
+    <a href="#">About Us</a>
+  </nav>
+
+  <p class="description">
     Your live trading platform with real-time currency charts and trading pairs.
   </p>
   <button id="btnGoLogin">Log In</button>
   <button id="btnGoSignup">Sign Up</button>
+
+  <div class="footer" role="contentinfo">
+    <p>SUITE 302 4 STATION SQUARE CAMBRIDGE UNITED KINGDOM CB1 2GE</p>
+    <p>This website is owned and operated by mytradinghub.<br />All contents © 2025 . All rights reserved.</p>
+  </div>
 </div>
 
+<!-- Auth container -->
 <div id="container" style="display:none;">
 
   <!-- Signup / Login forms container -->
@@ -348,6 +419,8 @@
   const logoutBtn = document.getElementById('logoutBtn');
   const buyBtn = document.getElementById('buyBtn');
   const sellBtn = document.getElementById('sellBtn');
+  const menuToggle = document.getElementById('menuToggle');
+  const menuDropdown = document.getElementById('menuDropdown');
 
   // Variables to hold state
   let generatedOtp = null;
@@ -457,14 +530,14 @@
     showError('errorMsgOtp', '');
 
     if (otpInput.value.trim() === generatedOtp) {
-      alert('Email verified! Please log in now.');
+      alert('Signup verified! Please log in now.');
       showLogin();
     } else {
-      showError('errorMsgOtp', 'Incorrect OTP, please try again.');
+      showError('errorMsgOtp', 'Incorrect OTP. Please try again.');
     }
   });
 
-  // Login form submit: simple dummy validation for demo
+  // Login form submit: Just basic check for demo
   loginForm.addEventListener('submit', e => {
     e.preventDefault();
     showError('errorMsgLogin', '');
@@ -472,62 +545,60 @@
     const email = loginForm.loginEmail.value.trim();
     const pass = loginForm.loginPassword.value.trim();
 
-    // For demo, accept only the userData.email and password created above
-    if (email === userData.email && pass === userData.password) {
-      showTrading();
-      initChartAndPairs();
-    } else {
+    if (email !== userData.email || pass !== userData.password) {
       showError('errorMsgLogin', 'Invalid email or password');
+      return;
     }
+    // Successful login
+    initChartAndPairs();
+    showTrading();
   });
 
   // Logout button
   logoutBtn.onclick = () => {
     userData = {};
-    clearChartInterval();
+    generatedOtp = null;
+    selectedPair = null;
+    if (chartInterval) clearInterval(chartInterval);
     showHomepage();
   };
 
-  // Create currency list buttons
-  function createPairButton(pair) {
-    const btn = document.createElement('button');
-    btn.textContent = pair.symbol;
-    btn.setAttribute('role', 'option');
-    btn.setAttribute('aria-selected', 'false');
-    btn.addEventListener('click', () => {
-      if (selectedPair !== pair.symbol) {
-        selectedPair = pair.symbol;
-        updateSelectedButton();
-        fetchAndUpdateChart(selectedPair);
-      }
-    });
-    return btn;
-  }
+  // Toggle menu dropdown
+  menuToggle.addEventListener('click', () => {
+    menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
+  });
+  document.addEventListener('click', e => {
+    if (!menuToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
+      menuDropdown.style.display = 'none';
+    }
+  });
 
-  // Render pairs filtered or all
+  // Render currency pairs list
   function renderPairs(pairs) {
     currencyList.innerHTML = '';
     pairs.forEach(pair => {
-      currencyList.appendChild(createPairButton(pair));
+      const btn = document.createElement('button');
+      btn.textContent = pair.symbol;
+      btn.setAttribute('role', 'option');
+      btn.onclick = () => {
+        selectedPair = pair.symbol;
+        updateSelectedButton();
+        fetchAndUpdateChart(selectedPair);
+      };
+      if (pair.symbol === selectedPair) btn.classList.add('active');
+      currencyList.appendChild(btn);
     });
-    updateSelectedButton();
   }
 
   // Update selected button highlight
   function updateSelectedButton() {
-    const buttons = currencyList.querySelectorAll('button');
-    buttons.forEach(btn => {
-      btn.setAttribute('aria-selected', btn.textContent === selectedPair ? 'true' : 'false');
-      if (btn.textContent === selectedPair) {
-        btn.classList.add('active');
-        btn.focus();
-      } else {
-        btn.classList.remove('active');
-      }
+    Array.from(currencyList.children).forEach(btn => {
+      if (btn.textContent === selectedPair) btn.classList.add('active');
+      else btn.classList.remove('active');
     });
   }
 
-  // Filter pairs based on search text
+  // Filter pairs based on search query
   function filterPairs(query) {
     if (!query) return allPairs;
     return allPairs.filter(pair => pair.symbol.toLowerCase().includes(query.toLowerCase()));
@@ -568,11 +639,10 @@
     if (chartInterval) clearInterval(chartInterval);
   }
 
-  // Fetch and update chart data
+  // Fetch and update chart data with demo random data
   function fetchAndUpdateChart(symbol) {
     clearChartInterval();
 
-    // Since no API key now, create demo random data for chart
     const points = [];
     const now = Math.floor(Date.now() / 1000);
     let price = 1.0 + Math.random() * 0.5;
@@ -583,7 +653,6 @@
     lineSeries.setData(points);
     pairTitle.textContent = `${symbol} Live Chart (Demo Data)`;
 
-    // Update chart every minute with new random data
     chartInterval = setInterval(() => {
       const last = points[points.length - 1];
       let newPrice = last.value + (Math.random() - 0.5) * 0.01;
@@ -595,7 +664,7 @@
   }
 
   // Initialize chart and load pairs after login
-  async function initChartAndPairs() {
+  function initChartAndPairs() {
     initChart();
     renderPairs(allPairs);
     if (allPairs.length > 0) {
