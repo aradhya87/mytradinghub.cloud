@@ -1,261 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Live Trading - MyTradingHub</title>
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="style.css" />
-<style>
-  body, html {
-    margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f9ff; color: #0d1b37;
-    display: flex; flex-direction: column;
-  }
-  header {
-    background: #0055ff; color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
-  }
-  .logo {
-    font-weight: 900; font-size: 1.5rem; letter-spacing: 2px;
-  }
-  nav {
-    display: flex; gap: 18px;
-  }
-  nav a {
-    color: white; font-weight: 600; text-decoration: none; padding: 8px 14px; border-radius: 4px;
-  }
-  nav a:hover, nav a.active {
-    background: #ffd600; color: #0055ff;
-  }
-  main {
-    flex: 1; display: flex; overflow: hidden;
-  }
-  .sidebar {
-    width: 220px; background: #e6f0ff; border-right: 2px solid #0055ff; padding: 10px;
-    overflow-y: auto;
-  }
-  .sidebar h2 {
-    margin-top: 0; color: #0039cc; font-weight: 700; font-size: 1.2rem;
-  }
-  .sidebar ul {
-    list-style: none; padding: 0; margin: 0;
-  }
-  .sidebar ul li {
-    background: white; margin-bottom: 8px; padding: 10px 12px; border-radius: 6px;
-    cursor: pointer; font-weight: 600; color: #0039cc; transition: background-color 0.3s ease;
-  }
-  .sidebar ul li:hover, .sidebar ul li.active {
-    background: #0055ff; color: white;
-  }
-  .content {
-    flex: 1; display: flex; flex-direction: column; padding: 15px 20px; overflow-y: auto;
-  }
-  .currency-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
-  }
-  .currency-header h1 {
-    margin: 0; font-weight: 700; color: #0055ff; font-size: 1.8rem;
-  }
-  .currency-header .price {
-    font-weight: 700; font-size: 1.1rem; color: #333;
-  }
-  .currency-header .change {
-    font-weight: 700; font-size: 1.1rem;
-  }
-  .currency-header .change.positive {
-    color: #28a745;
-  }
-  .currency-header .change.negative {
-    color: #dc3545;
-  }
-  .chart-container {
-    flex: 1; background: white; border-radius: 12px; box-shadow: 0 3px 15px rgb(0 85 255 / 0.2);
-    margin-bottom: 20px; overflow: hidden;
-  }
-  iframe {
-    border: none; width: 100%; height: 450px;
-  }
-  .trade-buttons {
-    display: flex; gap: 14px; justify-content: center;
-  }
-  .trade-buttons button {
-    flex: 1; padding: 16px 0; font-weight: 700; font-size: 1.2rem;
-    border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease;
-  }
-  .trade-buttons button.buy {
-    background: #0055ff; color: white;
-  }
-  .trade-buttons button.buy:hover {
-    background: #003bb5;
-  }
-  .trade-buttons button.sell {
-    background: #ffd600; color: #0055ff;
-  }
-  .trade-buttons button.sell:hover {
-    background: #cca800;
-  }
-  /* Modal styles */
-  .modal {
-    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0 0 0 / 0.5);
-    justify-content: center; align-items: center; z-index: 1000;
-  }
-  .modal.show {
-    display: flex;
-  }
-  .modal-content {
-    background: white; padding: 30px; border-radius: 14px; max-width: 350px; width: 90%;
-    box-shadow: 0 10px 30px rgb(0 85 255 / 0.25); position: relative;
-  }
-  .modal-content h2 {
-    margin-top: 0; color: #0055ff;
-  }
-  .modal-content label {
-    display: block; margin: 15px 0 6px; font-weight: 600;
-  }
-  .modal-content input[type="number"] {
-    width: 100%; padding: 10px; font-size: 1rem; border-radius: 6px; border: 1px solid #ccc;
-  }
-  .modal-content button.confirm {
-    margin-top: 20px; width: 100%; background: #0055ff; border: none; color: white;
-    font-weight: 700; font-size: 1.1rem; padding: 14px 0; border-radius: 8px; cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .modal-content button.confirm:hover {
-    background: #003bb5;
-  }
-  .modal-content .close-btn {
-    position: absolute; top: 12px; right: 16px; font-size: 26px; color: #0055ff; cursor: pointer;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading Page - MyTradingHub</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f6fc;
+      color: #0d1b37;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 240px;
+      background-color: #0055ff;
+      padding: 20px;
+      color: white;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      margin-bottom: 15px;
+    }
+    .sidebar input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+    }
+    .sidebar li:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 30px;
+    }
+    .chart-container {
+      height: 400px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+    }
+    #margin-info {
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #0055ff;
+      text-align: center;
+    }
+    .actions {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .actions button {
+      padding: 12px 24px;
+      margin: 0 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+    }
+    .buy {
+      background: #0bda51;
+    }
+    .sell {
+      background: #ff4b4b;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Pairs</h2>
+      <input type="text" id="search-box" placeholder="Search..." />
+      <ul id="pairs-list">
+        <li>BTC/USDT</li>
+        <li>ETH/USDT</li>
+        <li>XRP/USDT</li>
+        <li>BNB/USDT</li>
+        <li>ADA/USDT</li>
+        <li>SOL/USDT</li>
+        <li>MATIC/USDT</li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <div class="chart-container" id="chart">
+        <!-- TradingView Widget -->
+        <iframe id="live-chart" src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=1&theme=light"
+          style="width:100%;height:100%;border:0;" allowtransparency="true"></iframe>
+      </div>
 
-<header>
-  <div class="logo">MyTradingHub</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="support.html">Support</a>
-    <a href="faq.html">FAQs</a>
-    <a href="login.html">Log In</a>
-    <a href="signup.html">Open Account</a>
-  </nav>
-</header>
+      <div id="margin-info">Margin Profit/Loss: $+0.00</div>
 
-<main>
-  <div class="sidebar">
-    <h2>Pairs</h2>
-    <ul id="pairs-list">
-      <li class="active" data-pair="BTCUSD">BTC/USD</li>
-      <li data-pair="ETHUSD">ETH/USD</li>
-      <li data-pair="XRPUSD">XRP/USD</li>
-      <li data-pair="LTCUSD">LTC/USD</li>
-      <li data-pair="BCHUSD">BCH/USD</li>
-    </ul>
-  </div>
-  <div class="content">
-    <div class="currency-header">
-      <h1 id="pair-name">BTC/USD</h1>
-      <div>
-        <span class="price" id="pair-price">$0.00</span> &nbsp;
-        <span class="change positive" id="pair-change">+0.00%</span>
+      <div class="actions">
+        <button class="buy">Buy</button>
+        <button class="sell">Sell</button>
       </div>
     </div>
-    <div class="chart-container">
-      <iframe id="tradingview-chart" src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE:BTCUSDT&locale=en" scrolling="no" allowtransparency="true"></iframe>
-    </div>
-    <div class="trade-buttons">
-      <button class="buy">Buy</button>
-      <button class="sell">Sell</button>
-    </div>
   </div>
-</main>
 
-<!-- Modal for lots input -->
-<div class="modal" id="lot-modal">
-  <div class="modal-content">
-    <span class="close-btn" id="modal-close">&times;</span>
-    <h2 id="modal-title">Trade</h2>
-    <label for="lot-input">Select number of lots</label>
-    <input type="number" id="lot-input" min="1" value="1" />
-    <button class="confirm" id="confirm-trade">Confirm</button>
-  </div>
-</div>
+  <script>
+    // update iframe src when selecting pair
+    const pairs = document.querySelectorAll("#pairs-list li");
+    const chart = document.getElementById("live-chart");
+    const marginDisplay = document.getElementById("margin-info");
 
-<script src="script.js"></script>
-<script>
-  const pairs = {
-    BTCUSD: { price: 28950, change: +2.3, symbol: "BINANCE:BTCUSDT" },
-    ETHUSD: { price: 1820, change: -1.5, symbol: "BINANCE:ETHUSDT" },
-    XRPUSD: { price: 0.65, change: +0.8, symbol: "BINANCE:XRPUSDT" },
-    LTCUSD: { price: 90.5, change: -0.3, symbol: "BINANCE:LTCUSDT" },
-    BCHUSD: { price: 225, change: +1.1, symbol: "BINANCE:BCHUSDT" }
-  };
+    pairs.forEach(item => {
+      item.addEventListener("click", () => {
+        const symbol = "BINANCE:" + item.textContent.replace("/", "");
+        chart.src = `https://www.tradingview.com/widgetembed/?symbol=${symbol}&interval=1&theme=light`;
 
-  const pairsList = document.getElementById("pairs-list");
-  const pairNameEl = document.getElementById("pair-name");
-  const pairPriceEl = document.getElementById("pair-price");
-  const pairChangeEl = document.getElementById("pair-change");
-  const chartIframe = document.getElementById("tradingview-chart");
-  const buyBtn = document.querySelector(".trade-buttons .buy");
-  const sellBtn = document.querySelector(".trade-buttons .sell");
-  const modal = document.getElementById("lot-modal");
-  const modalTitle = document.getElementById("modal-title");
-  const lotInput = document.getElementById("lot-input");
-  const confirmTradeBtn = document.getElementById("confirm-trade");
-  const modalCloseBtn = document.getElementById("modal-close");
-
-  let currentPair = "BTCUSD";
-  let currentAction = null; // buy or sell
-
-  function updateUI(pairKey) {
-    const pair = pairs[pairKey];
-    pairNameEl.textContent = pairKey.replace("USD", "/USD");
-    pairPriceEl.textContent = `$${pair.price.toFixed(2)}`;
-    pairChangeEl.textContent = (pair.change > 0 ? "+" : "") + pair.change.toFixed(2) + "%";
-    pairChangeEl.className = "change " + (pair.change >= 0 ? "positive" : "negative");
-    chartIframe.src = `https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${pair.symbol}&locale=en`;
-  }
-
-  // initial UI
-  updateUI(currentPair);
-
-  // handle pair click
-  pairsList.querySelectorAll("li").forEach(li => {
-    li.addEventListener("click", () => {
-      pairsList.querySelector("li.active").classList.remove("active");
-      li.classList.add("active");
-      currentPair = li.dataset.pair;
-      updateUI(currentPair);
+        const margin = (Math.random() * 100 - 50).toFixed(2);
+        marginDisplay.textContent = `Margin Profit/Loss: $${margin}`;
+      });
     });
-  });
 
-  // open modal function
-  function openModal(action) {
-    currentAction = action;
-    modalTitle.textContent = action === "buy" ? "Buy Lots" : "Sell Lots";
-    lotInput.value = 1;
-    modal.classList.add("show");
-  }
-
-  buyBtn.addEventListener("click", () => openModal("buy"));
-  sellBtn.addEventListener("click", () => openModal("sell"));
-  modalCloseBtn.addEventListener("click", () => modal.classList.remove("show"));
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.classList.remove("show");
-  });
-
-  confirmTradeBtn.addEventListener("click", () => {
-    const lots = Number(lotInput.value);
-    if (lots < 1) {
-      alert("Please enter a valid number of lots");
-      return;
-    }
-    alert(`You have confirmed to ${currentAction.toUpperCase()} ${lots} lot(s) of ${currentPair.replace("USD", "/USD")}`);
-    modal.classList.remove("show");
-  });
-</script>
-
+    // search filter
+    document.getElementById("search-box").addEventListener("input", function () {
+      const filter = this.value.toUpperCase();
+      pairs.forEach(pair => {
+        pair.style.display = pair.textContent.toUpperCase().includes(filter) ? "block" : "none";
+      });
+    });
+  </script>
 </body>
 </html>
