@@ -81,7 +81,6 @@
           Loading... | $<span id="userBalance">0.00</span>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="billing.html">Billing Details</a></li>
           <li><a class="dropdown-item" href="deposit.html">Deposit</a></li>
           <li><a class="dropdown-item" href="withdrawal.html">Withdrawal</a></li>
           <li><a class="dropdown-item" href="wallet.html">Wallet</a></li>
@@ -90,7 +89,6 @@
           <li><a class="dropdown-item" href="changepassword.html">Change Password</a></li>
           <li><a class="dropdown-item" href="announcement.html">Announcement</a></li>
           <li><a class="dropdown-item" href="support.html">Online Service</a></li>
-          <li><a class="dropdown-item" href="index.html">Return Simulated Account</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" href="index.html">Logout</a></li>
         </ul>
@@ -154,9 +152,7 @@
               <th>Operation</th>
             </tr>
           </thead>
-          <tbody id="tradeTableBody">
-            <!-- Dynamic trades go here -->
-          </tbody>
+          <tbody id="tradeTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -164,21 +160,43 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const tradeHistory = [];
+    const getStoredTrades = () => JSON.parse(localStorage.getItem('openTrades') || '[]');
 
-    $(document).ready(function() {
-      const email = localStorage.getItem("userEmail") || "guest@trade.com";
-      const balance = localStorage.getItem("userBalance") || "10000.00";
-      $('#userDropdown').html(`${email} | $<span id="userBalance">${balance}</span>`);
+    const saveTrades = (trades) => {
+      localStorage.setItem('openTrades', JSON.stringify(trades));
+    };
 
-      $('#pairList li').on('click', function() {
-        const symbol = $(this).data('symbol');
-        const pair = $(this).text();
-        $('#chartFrame').attr('src', `https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${symbol}&locale=en`);
-        $('#pairTitle').text(pair);
-        $('#marketPrice').text('Live');
+    const loadTradesToTable = () => {
+      const trades = getStoredTrades();
+      const tbody = document.getElementById('tradeTableBody');
+      tbody.innerHTML = '';
+      trades.forEach(trade => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${trade.pair}</td>
+          <td>#${trade.reservation}</td>
+          <td>${trade.direction}</td>
+          <td>${trade.lots}</td>
+          <td>${trade.price}</td>
+          <td>${trade.currPrice}</td>
+          <td>${trade.takeProfit}</td>
+          <td>${trade.setLoss}</td>
+          <td>${trade.fee}</td>
+          <td>${trade.margin}</td>
+          <td>${trade.profit}</td>
+          <td>${trade.time}</td>
+          <td><button class='btn btn-sm btn-danger' onclick='closeTrade(${trade.reservation})'>Close</button></td>
+        `;
+        tbody.appendChild(row);
       });
-    });
+    };
+
+    function closeTrade(reservation) {
+      let trades = getStoredTrades();
+      trades = trades.filter(trade => trade.reservation !== reservation);
+      saveTrades(trades);
+      loadTradesToTable();
+    }
 
     function openTrade(direction) {
       const pair = $('#pairTitle').text();
@@ -189,26 +207,41 @@
       const reservation = Math.floor(Math.random() * 90000) + 10000;
       const now = new Date().toLocaleString();
 
-      const row = `
-        <tr>
-          <td>${pair}</td>
-          <td>#${reservation}</td>
-          <td>${direction}</td>
-          <td>${lots}</td>
-          <td>${price}</td>
-          <td>${(parseFloat(price) + 0.28).toFixed(2)}</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>${margin}</td>
-          <td>${(lots * 10).toFixed(2)}</td>
-          <td>${now}</td>
-          <td><button class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Close</button></td>
-        </tr>
-      `;
+      const trade = {
+        pair,
+        reservation,
+        direction,
+        lots,
+        price,
+        currPrice: (parseFloat(price) + 0.28).toFixed(2),
+        takeProfit: 0,
+        setLoss: 0,
+        fee: 0,
+        margin,
+        profit: (lots * 10).toFixed(2),
+        time: now
+      };
 
-      $('#tradeTableBody').append(row);
+      const trades = getStoredTrades();
+      trades.push(trade);
+      saveTrades(trades);
+      loadTradesToTable();
     }
+
+    $(document).ready(function() {
+      const email = localStorage.getItem("userEmail") || "guest@trade.com";
+      const balance = localStorage.getItem("userBalance") || "0.00";
+      $('#userDropdown').html(`${email} | $<span id="userBalance">${balance}</span>`);
+
+      $('#pairList li').on('click', function() {
+        const symbol = $(this).data('symbol');
+        const pair = $(this).text();
+        $('#chartFrame').attr('src', `https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${symbol}&locale=en`);
+        $('#pairTitle').text(pair);
+      });
+
+      loadTradesToTable();
+    });
   </script>
 </body>
 </html>
