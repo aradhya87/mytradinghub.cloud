@@ -1,76 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAQs - MyTradingHub</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .faq-item {
-      margin-bottom: 20px;
-    }
-    .faq-question {
-      font-weight: bold;
-      color: #0055ff;
-      cursor: pointer;
-      margin-bottom: 5px;
-    }
-    .faq-answer {
-      display: none;
-      padding-left: 15px;
-      color: #333;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FAQs - MyTradingHub</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    background: #f5f9ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #0d1b37;
+    margin: 0; padding: 20px;
+  }
+  header {
+    background: #0055ff; color: white; padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-weight: 900; font-size: 1.5rem; letter-spacing: 2px;
+  }
+  nav {
+    display: flex; gap: 18px;
+  }
+  nav a {
+    font-weight: 600; padding: 8px 14px; border-radius: 4px; color: white;
+    text-decoration: none;
+  }
+  nav a:hover {
+    background: #ffd600; color: #0055ff;
+  }
+  main {
+    max-width: 900px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgb(0 85 255 / 0.15);
+  }
+  h1 {
+    color: #0055ff;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  details {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #0055ff;
+    padding: 12px 16px;
+    background: #e6f0ff;
+  }
+  summary {
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  p {
+    margin-top: 8px;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MyTradingHub</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="support.html">Support</a>
-      <a href="faq.html">FAQs</a>
-    </nav>
-  </header>
+<header>
+  <div class="logo">MyTradingHub</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="support.html">Support</a>
+    <a href="faq.html" class="active">FAQs</a>
+    <a href="login.html">Log In</a>
+    <a href="signup.html">Open Account</a>
+  </nav>
+</header>
 
-  <div class="chart-area" style="padding: 30px;">
-    <h2>Frequently Asked Questions</h2>
+<main>
+  <h1>Frequently Asked Questions</h1>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleAnswer(this)">How do I create an account?</div>
-      <div class="faq-answer">Click on the Sign Up page and fill the form with your details to create your account.</div>
-    </div>
+  <details>
+    <summary>How do I create a trading account?</summary>
+    <p>Click on the Open Account button, fill the signup form with your details, and submit to create your account.</p>
+  </details>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleAnswer(this)">What payment methods do you accept?</div>
-      <div class="faq-answer">Currently, we accept payments via bank transfer and popular cryptocurrencies.</div>
-    </div>
+  <details>
+    <summary>What payment methods do you accept?</summary>
+    <p>We accept major credit cards, bank transfers, and popular e-wallets.</p>
+  </details>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleAnswer(this)">How do I reset my password?</div>
-      <div class="faq-answer">Go to the login page and click on the 'Forgot Password' link to reset your password via email.</div>
-    </div>
+  <details>
+    <summary>Is my personal information safe?</summary>
+    <p>Yes, we use advanced encryption and security protocols to protect your data.</p>
+  </details>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleAnswer(this)">Is my data secure?</div>
-      <div class="faq-answer">We use industry-standard encryption to protect your personal and financial information.</div>
-    </div>
+  <details>
+    <summary>Can I trade cryptocurrencies and forex?</summary>
+    <p>Yes, our platform supports a wide range of trading pairs including cryptocurrencies and forex.</p>
+  </details>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleAnswer(this)">How can I contact support?</div>
-      <div class="faq-answer">Visit our Support page or email us at support@mytradinghub.cloud for assistance.</div>
-    </div>
-  </div>
+  <details>
+    <summary>How can I contact customer support?</summary>
+    <p>You can reach us via email, phone, or live chat on our Support page.</p>
+  </details>
 
-  <script>
-    function toggleAnswer(element) {
-      const answer = element.nextElementSibling;
-      if (answer.style.display === "block") {
-        answer.style.display = "none";
-      } else {
-        answer.style.display = "block";
-      }
-    }
-  </script>
+</main>
 </body>
 </html>
