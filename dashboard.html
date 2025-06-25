@@ -63,8 +63,8 @@
       <li class="list-group-item" data-symbol="OANDA:BTCUSD">BTCUSD</li>
       <li class="list-group-item" data-symbol="OANDA:ETHUSD">ETHUSD</li>
       <li class="list-group-item" data-symbol="OANDA:USDJPY">USDJPY</li>
-      <li class="list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
-      <li class="list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
+      <li class="list-item list-group-item" data-symbol="OANDA:NZDUSD">NZDUSD</li>
+      <li class="list-item list-group-item" data-symbol="OANDA:USDCAD">USDCAD</li>
     </ul>
   </div>
 
@@ -76,18 +76,17 @@
           Loading...
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Billing Details</a></li>
-          <li><a class="dropdown-item" href="#">Deposit</a></li>
-          <li><a class="dropdown-item" href="#">Withdrawal</a></li>
-          <li><a class="dropdown-item" href="#">Wallet</a></li>
-          <li><a class="dropdown-item" href="#">Real Name Verification</a></li>
-          <li><a class="dropdown-item" href="#">Invite Friends</a></li>
-          <li><a class="dropdown-item" href="#">Change Password</a></li>
+          <li><a class="dropdown-item" href="deposit.html">Deposit</a></li>
+          <li><a class="dropdown-item" href="withdrawal.html">Withdrawal</a></li>
+          <li><a class="dropdown-item" href="wallet.html">Wallet</a></li>
+          <li><a class="dropdown-item" href="verify.html">Real Name Verification</a></li>
+          <li><a class="dropdown-item" href="invite.html">Invite Friends</a></li>
+          <li><a class="dropdown-item" href="changepassword.html">Change Password</a></li>
           <li><a class="dropdown-item" href="#">Announcement</a></li>
-          <li><a class="dropdown-item" href="#">Online Service</a></li>
+          <li><a class="dropdown-item" href="https://t.me/tradinghub_cloud" target="_blank">Online Service</a></li>
           <li><a class="dropdown-item" href="#">Return Simulated Account</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+          <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -144,6 +143,11 @@
         $('#marketPrice').text('Loading...');
       });
     });
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = 'login.html';
+    }
   </script>
 </body>
 </html>
