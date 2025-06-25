@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MyTradingHub - Forex Trading</title>
-<link rel="stylesheet" href="style.css" />
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js"></script>
-<!-- TradingView Chart -->
-<script src="https://s3.tradingview.com/tv.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyTradingHub - Forex Trading</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- 🔁 Redirect GitHub Pages to Custom Domain -->
+  <script>
+    if (location.hostname.includes("github.io")) {
+      window.location.replace("https://mytradinghub.cloud");
+    }
+  </script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js"></script>
+
+  <!-- TradingView Chart -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
 
@@ -69,21 +78,20 @@
 </div>
 
 <script>
-// Firebase Config - replace with your own Firebase config from console.firebase.google.com
 const firebaseConfig = {
   apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_FIREBASE_AUTHDOMAIN",
-  projectId: "YOUR_FIREBASE_PROJECTID",
-  storageBucket: "YOUR_FIREBASE_STORAGEBUCKET",
+  authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+  projectId: "YOUR_FIREBASE_PROJECT_ID",
+  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
   messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
-  appId: "YOUR_FIREBASE_APPID"
+  appId: "YOUR_FIREBASE_APP_ID"
 };
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-const apiKey = "YOUR_TWELVEDATA_API_KEY"; // get free key from twelvedata.com
+const apiKey = "YOUR_TWELVEDATA_API_KEY"; // Replace with your TwelveData key
 
 const pairSelect = document.getElementById("pairSelect");
 const priceSpan = document.getElementById("price");
@@ -276,7 +284,6 @@ pairSelect.addEventListener("change", () => {
   loadTradeHistory();
   loadChart();
 });
-
 </script>
 
 </body>
