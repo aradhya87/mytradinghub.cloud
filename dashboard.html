@@ -206,6 +206,11 @@
       const price = (Math.random() * 1000 + 2000).toFixed(2);
       const reservation = Math.floor(Math.random() * 90000) + 10000;
       const now = new Date().toLocaleString();
+      const balance = parseFloat(localStorage.getItem('userBalance') || '0.00');
+
+      const profit = direction === 'Buy' ? (lots * 11).toFixed(2) : (lots * -11).toFixed(2);
+      const updatedBalance = (balance + parseFloat(profit)).toFixed(2);
+      localStorage.setItem('userBalance', updatedBalance);
 
       const trade = {
         pair,
@@ -218,7 +223,7 @@
         setLoss: 0,
         fee: 0,
         margin,
-        profit: (lots * 10).toFixed(2),
+        profit,
         time: now
       };
 
@@ -226,6 +231,7 @@
       trades.push(trade);
       saveTrades(trades);
       loadTradesToTable();
+      $('#userBalance').text(updatedBalance);
     }
 
     $(document).ready(function() {
