@@ -3,10 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyTradingHub - Forex Trading</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>MyTradingHub - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      background: linear-gradient(to right, #0077ff, #00c6ff);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .menu {
+      display: none;
+      flex-direction: column;
+      background-color: white;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      color: #0077ff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .menu a {
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #0077ff;
+      border-bottom: 1px solid #ddd;
+    }
+    .menu a:last-child {
+      border-bottom: none;
+    }
+    .hamburger {
+      cursor: pointer;
+      font-size: 28px;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background-color: white;
+      color: #0077ff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #f0f0f0;
+    }
+    @media (max-width: 768px) {
+      .btn-group {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
 
-  <!-- ✅ GitHub to mytradinghub.cloud redirect -->
+  <!-- Redirect GitHub to your domain -->
   <script>
     if (location.hostname.includes("github.io")) {
       window.location.replace("https://mytradinghub.cloud");
@@ -14,7 +104,34 @@
   </script>
 </head>
 <body>
+
+<header>
+  <div class="logo">MyTradingHub</div>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="menu" id="dropdownMenu">
+    <a href="#">Contact Us</a>
+    <a href="#">Customer Support</a>
+    <a href="#">FAQs</a>
+    <a href="#">About Us</a>
+  </div>
+</header>
+
+<main>
   <h1>Welcome to MyTradingHub</h1>
-  <p>Your live trading dashboard will appear here soon</p>
+  <p>Your gateway to powerful forex trading tools and live market action</p>
+  <div class="btn-group">
+    <a href="#" class="btn">Log In</a>
+    <a href="#" class="btn">Open Account</a>
+    <a href="#" class="btn">Contact Us</a>
+  </div>
+</main>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('dropdownMenu');
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+  }
+</script>
+
 </body>
 </html>
