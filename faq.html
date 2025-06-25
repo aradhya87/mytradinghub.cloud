@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQs - MyTradingHub</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .faq-item {
+      margin-bottom: 20px;
+    }
+    .faq-question {
+      font-weight: bold;
+      color: #0055ff;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+    .faq-answer {
+      display: none;
+      padding-left: 15px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">MyTradingHub</div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="support.html">Support</a>
+      <a href="faq.html">FAQs</a>
+    </nav>
+  </header>
+
+  <div class="chart-area" style="padding: 30px;">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleAnswer(this)">How do I create an account?</div>
+      <div class="faq-answer">Click on the Sign Up page and fill the form with your details to create your account.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleAnswer(this)">What payment methods do you accept?</div>
+      <div class="faq-answer">Currently, we accept payments via bank transfer and popular cryptocurrencies.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleAnswer(this)">How do I reset my password?</div>
+      <div class="faq-answer">Go to the login page and click on the 'Forgot Password' link to reset your password via email.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleAnswer(this)">Is my data secure?</div>
+      <div class="faq-answer">We use industry-standard encryption to protect your personal and financial information.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleAnswer(this)">How can I contact support?</div>
+      <div class="faq-answer">Visit our Support page or email us at support@mytradinghub.cloud for assistance.</div>
+    </div>
+  </div>
+
+  <script>
+    function toggleAnswer(element) {
+      const answer = element.nextElementSibling;
+      if (answer.style.display === "block") {
+        answer.style.display = "none";
+      } else {
+        answer.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
