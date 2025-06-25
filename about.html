@@ -1,25 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About - MyTradingHub</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About Us - MyTradingHub</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    background: #f5f9ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #0d1b37;
+    margin: 0; padding: 20px;
+  }
+  header {
+    background: #0055ff; color: white; padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-weight: 900; font-size: 1.5rem; letter-spacing: 2px;
+  }
+  nav {
+    display: flex; gap: 18px;
+  }
+  nav a {
+    font-weight: 600; padding: 8px 14px; border-radius: 4px; color: white;
+    text-decoration: none;
+  }
+  nav a:hover {
+    background: #ffd600; color: #0055ff;
+  }
+  main {
+    max-width: 900px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgb(0 85 255 / 0.15);
+  }
+  h1 {
+    color: #0055ff;
+    margin-top: 0;
+  }
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MyTradingHub</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="support.html">Support</a>
-      <a href="faq.html">FAQs</a>
-    </nav>
-  </header>
+<header>
+  <div class="logo">MyTradingHub</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html" class="active">About</a>
+    <a href="support.html">Support</a>
+    <a href="faq.html">FAQs</a>
+    <a href="login.html">Log In</a>
+    <a href="signup.html">Open Account</a>
+  </nav>
+</header>
 
-  <div class="chart-area">
-    <h2>About MyTradingHub</h2>
-    <p>We are building a reliable and modern trading platform for everyone.</p>
-  </div>
+<main>
+  <h1>About Us</h1>
+  <p>Welcome to MyTradingHub your trusted trading platform built with care and power. We empower traders with live real-time charts easy navigation and secure trading experience.</p>
+  <p>Our mission is to simplify trading with modern tools inspired by top platforms like LandPrime while focusing on reliability and user trust.</p>
+  <p>Join thousands of users who trust MyTradingHub for their trading journey.</p>
+</main>
 </body>
 </html>
