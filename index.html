@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyTradingHub - Live Forex Trading</title>
+  <title>TradingHub - Live Forex Trading</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -18,19 +18,33 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      user-select: none;
     }
     header {
-      padding: 20px;
+      padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(0, 0, 0, 0.15);
       position: relative;
       z-index: 10;
     }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: default;
+    }
+    .logo-svg {
+      width: 32px;
+      height: 32px;
+      fill: white;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,0.3));
+    }
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      user-select: none;
     }
     .menu {
       display: none;
@@ -38,133 +52,194 @@
       background-color: white;
       position: absolute;
       right: 20px;
-      top: 60px;
+      top: 55px;
       color: #0077ff;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       min-width: 160px;
+      font-weight: 600;
+      user-select: none;
     }
     .menu a {
-      padding: 10px 20px;
+      padding: 12px 20px;
       text-decoration: none;
       color: #0077ff;
       border-bottom: 1px solid #ddd;
+      transition: background-color 0.25s;
     }
     .menu a:last-child {
       border-bottom: none;
+    }
+    .menu a:hover {
+      background-color: #eef6ff;
     }
     .hamburger {
       cursor: pointer;
       font-size: 28px;
       user-select: none;
     }
+
     main {
       flex: 1;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       padding: 20px;
       gap: 20px;
-    }
-    h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    p {
-      font-size: 18px;
-      max-width: 450px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .btn-group {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .btn {
-      background-color: white;
-      color: #0077ff;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: 0.3s ease;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 95vw;
       user-select: none;
     }
-    .btn:hover {
-      background-color: #f0f0f0;
-    }
-    /* Search input */
-    #searchInput {
+
+    /* Left side: currency list and search */
+    #leftPanel {
       width: 320px;
-      max-width: 90vw;
+      max-width: 100%;
+      background: rgba(255 255 255 / 0.15);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      padding: 15px 20px;
+      display: flex;
+      flex-direction: column;
+      user-select: text;
+    }
+    #searchInput {
       padding: 10px 15px;
       border-radius: 25px;
       border: none;
       font-size: 16px;
       outline: none;
-      box-shadow: 0 0 8px rgba(255 255 255 / 0.6);
+      margin-bottom: 12px;
       user-select: text;
     }
-    /* Currency table */
-    #currencyTable {
-      width: 350px;
-      max-width: 90vw;
-      background: rgba(255 255 255 / 0.15);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    #currencyList {
+      overflow-y: auto;
+      flex: 1;
+    }
+    #currencyList button {
+      background: transparent;
+      border: none;
+      color: white;
+      width: 100%;
+      text-align: left;
+      padding: 10px 15px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
       user-select: none;
     }
-    #currencyTable thead {
-      background: rgba(255 255 255 / 0.25);
-      font-weight: 700;
-      font-size: 16px;
-    }
-    #currencyTable th,
-    #currencyTable td {
-      padding: 12px 15px;
-      text-align: center;
-    }
-    #currencyTable tbody tr {
-      cursor: pointer;
-    }
-    #currencyTable tbody tr:nth-child(even) {
-      background: rgba(255 255 255 / 0.1);
-    }
-    #currencyTable tbody tr:hover {
+    #currencyList button:hover, #currencyList button.active {
       background: rgba(255 255 255 / 0.3);
     }
-    /* Chart container */
-    #chartContainer {
-      width: 100%;
-      max-width: 900px;
-      height: 400px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+
+    /* Right side: chart and info */
+    #rightPanel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
       user-select: none;
     }
-    @media (max-width: 768px) {
-      .btn-group {
+    #chartContainer {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      min-height: 400px;
+    }
+
+    #pairTitle {
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      user-select: text;
+    }
+
+    /* Features section below */
+    #featuresSection {
+      background: rgba(255 255 255 / 0.15);
+      border-radius: 12px;
+      padding: 30px 20px;
+      color: white;
+      max-width: 1200px;
+      margin: 20px auto 40px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      user-select: text;
+    }
+    #featuresSection h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 700;
+      text-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    #featuresSection ul {
+      list-style: none;
+      padding-left: 0;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    #featuresSection ul li {
+      margin-bottom: 15px;
+      font-size: 18px;
+      line-height: 1.5;
+      position: relative;
+      padding-left: 30px;
+    }
+    #featuresSection ul li::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #00ffea;
+      font-weight: 900;
+      font-size: 20px;
+      user-select: none;
+    }
+
+    /* Header buttons */
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+    .btn {
+      background-color: white;
+      color: #0077ff;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.3s ease;
+      user-select: none;
+      box-shadow: 0 0 8px rgba(255 255 255 / 0.8);
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    @media (max-width: 960px) {
+      main {
         flex-direction: column;
-        gap: 15px;
       }
-      #currencyTable {
+      #leftPanel {
         width: 100%;
+        max-height: 300px;
+        margin-bottom: 20px;
       }
-      #searchInput {
-        width: 100%;
-      }
-      #chartContainer {
-        height: 300px;
+      #rightPanel {
+        min-height: 300px;
       }
     }
   </style>
 
-  <!-- Redirect GitHub to your domain -->
   <script>
     if (location.hostname.includes("github.io")) {
       window.location.replace("https://mytradinghub.cloud");
@@ -174,9 +249,15 @@
 <body>
 
 <header>
-  <div class="logo">MyTradingHub</div>
-  <div class="hamburger" onclick="toggleMenu()">☰</div>
-  <nav class="menu" id="dropdownMenu">
+  <div class="logo-container" title="TradingHub - Your Forex Trading Platform">
+    <!-- Binance style trading logo SVG -->
+    <svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.8 9.2 5.6 10.6 7 13.4 4.2 12 2.8ZM5 10.7 3.6 9.3 0 13 5 18 8.3 14.7 6.9 13.3 9.7 10.5 7.9 8.7 5 10.7Zm14 0-2.8 2.8 1.4 1.4 3.3-3.3-5-4.9-2.8 2.8 1.4 1.4-3.3 3.3 3.3 3.3-1.4 1.4-3.3-3.3-3.3 3.3-1.4-1.4 3.3-3.3-1.4-1.4-2.8 2.8-5 4.9 3.3 3.3 1.4-1.4 2.8-2.8-1.4-1.4 3.3-3.3 1.8 1.8 1.2 1.2 2.8-2.8 2.8 2.8 1.4-1.4 3.3-3.3-3.3-3.3Z"/>
+    </svg>
+    <div class="logo-text">TradingHub</div>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){toggleMenu();}">☰</div>
+  <nav class="menu" id="dropdownMenu" aria-label="Site navigation menu">
     <a href="#">Contact Us</a>
     <a href="#">Customer Support</a>
     <a href="#">FAQs</a>
@@ -185,118 +266,104 @@
 </header>
 
 <main>
-  <h1>Welcome to MyTradingHub</h1>
-  <p>Your gateway to powerful forex trading tools and live market action</p>
-  <div class="btn-group">
-    <a href="#" class="btn">Log In</a>
-    <a href="#" class="btn">Open Account</a>
-    <a href="#" class="btn">Contact Us</a>
+  <div id="leftPanel" role="region" aria-label="Currency pairs and search">
+    <div class="btn-group" role="group" aria-label="Primary action buttons" style="margin-bottom:10px;">
+      <a href="#" class="btn">Log In</a>
+      <a href="#" class="btn">Open Account</a>
+      <a href="#" class="btn">Contact Us</a>
+    </div>
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search currency pairs..."
+      aria-label="Search currency pairs"
+      autocomplete="off"
+    />
+    <div id="currencyList" tabindex="0" role="listbox" aria-label="List of currency pairs" aria-live="polite">
+      <!-- Currency pairs buttons inserted here -->
+    </div>
   </div>
-
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="Search currency pairs..."
-    aria-label="Search currency pairs"
-  />
-
-  <table id="currencyTable" aria-label="Live Currency Pairs">
-    <thead>
-      <tr>
-        <th>Pair</th>
-        <th>Price (USD)</th>
-      </tr>
-    </thead>
-    <tbody id="currencyBody">
-      <!-- Currency rows inserted here -->
-    </tbody>
-  </table>
-
-  <div id="chartContainer"></div>
+  <div id="rightPanel" role="main">
+    <div id="pairTitle" aria-live="polite">Loading chart...</div>
+    <div id="chartContainer" role="region" aria-label="Live trading chart"></div>
+  </div>
 </main>
 
-<!-- TradingView Lightweight Charts library -->
-<script src="https://unpkg.com/lightweight-charts@3.9.0/dist/lightweight-charts.standalone.production.js"></script>
+<section id="featuresSection" aria-labelledby="featuresHeading">
+  <h2 id="featuresHeading">Trade Features & Customs</h2>
+  <ul>
+    <li>Real-time live forex prices from trusted APIs updated every 10 seconds</li>
+    <li>Interactive charts powered by TradingView Lightweight Charts for smooth, responsive experience</li>
+    <li>Searchable currency pairs to quickly find and analyze your favorite markets</li>
+    <li>Simple and intuitive user interface with fast trade execution buttons</li>
+    <li>Secure login and account management to protect your trades and balance</li>
+    <li>Customizable trade lot sizes and profit/loss tracking coming soon</li>
+    <li>24/7 customer support and detailed FAQs to assist every trader</li>
+  </ul>
+</section>
 
+<script src="https://unpkg.com/lightweight-charts@3.9.0/dist/lightweight-charts.standalone.production.js"></script>
 <script>
   function toggleMenu() {
     const menu = document.getElementById('dropdownMenu');
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
   }
 
-  const apiKey = 'a58af8d2469c4c63a44dc133a2c28481'; // Your API key
+  // Your API key
+  const apiKey = 'a58af8d2469c4c63a44dc133a2c28481';
 
-  const pairs = [
-    { symbol: 'EUR/USD', code: 'EURUSD' },
-    { symbol: 'USD/JPY', code: 'USDJPY' },
-    { symbol: 'GBP/USD', code: 'GBPUSD' },
-    { symbol: 'AUD/USD', code: 'AUDUSD' },
-    { symbol: 'USD/CAD', code: 'USDCAD' },
-    { symbol: 'USD/CHF', code: 'USDCHF' },
-    { symbol: 'NZD/USD', code: 'NZDUSD' },
-  ];
+  // This endpoint gives all forex pairs available on Twelve Data API
+  const allPairsUrl = `https://api.twelvedata.com/forex_pairs?apikey=${apiKey}`;
 
-  const tbody = document.getElementById('currencyBody');
+  let allPairs = [];
   let chart = null;
   let lineSeries = null;
   let chartInterval = null;
-  let selectedPairCode = pairs[0].code; // Default selected pair
+  let selectedPair = null;
 
-  // Create table rows and add click listeners
-  function renderRows(filter = '') {
-    tbody.innerHTML = '';
-    const filteredPairs = pairs.filter(p => p.symbol.toLowerCase().includes(filter.toLowerCase()) || p.code.toLowerCase().includes(filter.toLowerCase()));
-    filteredPairs.forEach(pair => {
-      const row = document.createElement('tr');
-      row.id = `row-${pair.code}`;
-      row.innerHTML = `<td>${pair.symbol}</td><td class="price" id="price-${pair.code}">Loading...</td>`;
-      row.addEventListener('click', () => {
-        if (selectedPairCode !== pair.code) {
-          selectedPairCode = pair.code;
-          updateChart(pair.code);
-          highlightSelectedRow(pair.code);
-        }
-      });
-      tbody.appendChild(row);
-    });
-  }
+  const currencyList = document.getElementById('currencyList');
+  const searchInput = document.getElementById('searchInput');
+  const pairTitle = document.getElementById('pairTitle');
 
-  function highlightSelectedRow(code) {
-    pairs.forEach(pair => {
-      const row = document.getElementById(`row-${pair.code}`);
-      if (row) {
-        if (pair.code === code) {
-          row.style.backgroundColor = 'rgba(255 255 255 / 0.3)';
-          row.style.fontWeight = '700';
-        } else {
-          row.style.backgroundColor = '';
-          row.style.fontWeight = '';
-        }
+  function createPairButton(pair) {
+    const btn = document.createElement('button');
+    btn.textContent = pair.symbol;
+    btn.setAttribute('role', 'option');
+    btn.setAttribute('aria-selected', 'false');
+    btn.addEventListener('click', () => {
+      if (selectedPair !== pair.symbol) {
+        selectedPair = pair.symbol;
+        updateSelectedButton();
+        updateChart(selectedPair);
       }
     });
+    return btn;
   }
 
-  // Fetch current prices every 10 seconds
-  function fetchPrices() {
-    pairs.forEach(pair => {
-      fetch(`https://api.twelvedata.com/price?symbol=${pair.code}&apikey=${apiKey}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.price) {
-            const priceEl = document.getElementById(`price-${pair.code}`);
-            if (priceEl) priceEl.textContent = parseFloat(data.price).toFixed(5);
-          }
-        })
-        .catch(() => {
-          // ignore errors silently
-        });
+  function updateSelectedButton() {
+    Array.from(currencyList.children).forEach(btn => {
+      btn.setAttribute('aria-selected', btn.textContent === selectedPair ? 'true' : 'false');
+      btn.classList.toggle('active', btn.textContent === selectedPair);
     });
   }
 
-  // Initialize chart with Lightweight Charts
+  function renderPairs(pairsToShow) {
+    currencyList.innerHTML = '';
+    pairsToShow.forEach(pair => {
+      const btn = createPairButton(pair);
+      currencyList.appendChild(btn);
+    });
+  }
+
+  function filterPairs(term) {
+    if (!term) return allPairs;
+    const lower = term.toLowerCase();
+    return allPairs.filter(p => p.symbol.toLowerCase().includes(lower));
+  }
+
   function initChart() {
     const chartContainer = document.getElementById('chartContainer');
-    chartContainer.innerHTML = ''; // Clear old chart if any
+    chartContainer.innerHTML = '';
 
     chart = LightweightCharts.createChart(chartContainer, {
       width: chartContainer.clientWidth,
@@ -306,17 +373,10 @@
         textColor: '#000000',
       },
       grid: {
-        vertLines: {
-          color: '#eee',
-        },
-        horzLines: {
-          color: '#eee',
-        },
+        vertLines: { color: '#eee' },
+        horzLines: { color: '#eee' },
       },
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-      },
+      timeScale: { timeVisible: true, secondsVisible: false },
     });
 
     lineSeries = chart.addLineSeries({
@@ -325,54 +385,70 @@
     });
   }
 
-  // Fetch historical data and update chart
-  function updateChart(pairCode) {
+  function fetchAndUpdateChart(symbol) {
     if (chartInterval) clearInterval(chartInterval);
 
-    // TwelveData endpoint for 1min candles for last 100 points
-    const url = `https://api.twelvedata.com/time_series?symbol=${pairCode}&interval=1min&outputsize=100&apikey=${apiKey}`;
+    // Format symbol: Twelve Data expects pairs like EUR/USD or EURUSD depending on endpoint
+    const symbolFormatted = symbol.replace('/', '');
+
+    const url = `https://api.twelvedata.com/time_series?symbol=${symbolFormatted}&interval=1min&outputsize=100&apikey=${apiKey}`;
 
     fetch(url)
       .then(res => res.json())
       .then(data => {
         if (data.values) {
-          const candlesticks = data.values
-            .map(candle => ({
-              time: Math.floor(new Date(candle.datetime).getTime() / 1000),
-              value: parseFloat(candle.close),
-            }))
-            .reverse();
+          const points = data.values.map(candle => ({
+            time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+            value: parseFloat(candle.close),
+          })).reverse();
 
-          lineSeries.setData(candlesticks);
+          lineSeries.setData(points);
+          pairTitle.textContent = `${symbol} Live Chart`;
+        } else {
+          lineSeries.setData([]);
+          pairTitle.textContent = `${symbol} - No Data`;
         }
       })
       .catch(() => {
         lineSeries.setData([]);
+        pairTitle.textContent = `${symbol} - Error loading data`;
       });
 
-    // Update chart data every 60 seconds
+    // Update every 60 seconds
     chartInterval = setInterval(() => {
       fetch(url)
         .then(res => res.json())
         .then(data => {
           if (data.values) {
-            const candlesticks = data.values
-              .map(candle => ({
-                time: Math.floor(new Date(candle.datetime).getTime() / 1000),
-                value: parseFloat(candle.close),
-              }))
-              .reverse();
+            const points = data.values.map(candle => ({
+              time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+              value: parseFloat(candle.close),
+            })).reverse();
 
-            lineSeries.setData(candlesticks);
+            lineSeries.setData(points);
+            pairTitle.textContent = `${symbol} Live Chart`;
           }
         })
         .catch(() => {
           lineSeries.setData([]);
+          pairTitle.textContent = `${symbol} - Error loading data`;
         });
     }, 60000);
   }
 
-  // Resize chart on window resize
+  searchInput.addEventListener('input', () => {
+    const filtered = filterPairs(searchInput.value);
+    renderPairs(filtered);
+    if (filtered.length > 0) {
+      selectedPair = filtered[0].symbol;
+      updateSelectedButton();
+      fetchAndUpdateChart(selectedPair);
+    } else {
+      pairTitle.textContent = 'No matching pairs found';
+      lineSeries.setData([]);
+    }
+  });
+
   window.addEventListener('resize', () => {
     if (chart) {
       const chartContainer = document.getElementById('chartContainer');
@@ -380,25 +456,29 @@
     }
   });
 
-  // Search input event
-  document.getElementById('searchInput').addEventListener('input', (e) => {
-    renderRows(e.target.value);
-    // If current selected pair is filtered out, select first visible pair
-    const visiblePairs = pairs.filter(p => p.symbol.toLowerCase().includes(e.target.value.toLowerCase()) || p.code.toLowerCase().includes(e.target.value.toLowerCase()));
-    if (!visiblePairs.some(p => p.code === selectedPairCode) && visiblePairs.length > 0) {
-      selectedPairCode = visiblePairs[0].code;
-      updateChart(selectedPairCode);
-      highlightSelectedRow(selectedPairCode);
-    }
-  });
-
-  // Initial setup
-  renderRows();
-  fetchPrices();
-  setInterval(fetchPrices, 10000);
+  // Initialize
   initChart();
-  updateChart(selectedPairCode);
-  highlightSelectedRow(selectedPairCode);
+
+  // Fetch all pairs from API on load
+  fetch(allPairsUrl)
+    .then(res => res.json())
+    .then(data => {
+      if (data.data) {
+        allPairs = data.data.map(pair => ({ symbol: pair.symbol }));
+        renderPairs(allPairs);
+
+        if (allPairs.length > 0) {
+          selectedPair = allPairs[0].symbol;
+          updateSelectedButton();
+          fetchAndUpdateChart(selectedPair);
+        }
+      } else {
+        pairTitle.textContent = 'Unable to load currency pairs';
+      }
+    })
+    .catch(() => {
+      pairTitle.textContent = 'Error fetching currency pairs';
+    });
 </script>
 
 </body>
