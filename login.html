@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - MyTradingHub</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0 0 0 0.1);
+    }
+    .login-container h2 {
+      text-align: center;
+      color: #0055ff;
+    }
+    .login-container label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .login-container button {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #0077ff;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .login-container button:hover {
+      background-color: #0055cc;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">MyTradingHub</div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="support.html">Support</a>
+      <a href="faq.html">FAQs</a>
+    </nav>
+  </header>
+
+  <div class="login-container">
+    <h2>Login to Your Account</h2>
+    <form>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required />
+
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+</body>
+</html>
