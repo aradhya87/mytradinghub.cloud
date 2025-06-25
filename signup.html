@@ -1,77 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login & Signup - MyTradingHub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup - MyTradingHub</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #f2f2f2; display: flex; flex-direction: column; align-items: center; padding: 40px; }
-    h1 { margin-bottom: 20px; color: #003366; }
-    .form-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
-    .form-container input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-    .form-container button { padding: 12px; background: #003366; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 10px; }
-    .otp-box { font-size: 20px; font-weight: bold; color: #007700; text-align: center; margin: 10px 0; }
-    .error { color: red; text-align: center; margin-top: 10px; }
+    .signup-container {
+      max-width: 400px;
+      margin: 80px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0 0 0 0.1);
+    }
+    .signup-container h2 {
+      text-align: center;
+      color: #0055ff;
+    }
+    .signup-container label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .signup-container input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .signup-container button {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #0077ff;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .signup-container button:hover {
+      background-color: #0055cc;
+    }
   </style>
 </head>
 <body>
+  <header class="header">
+    <div class="logo">MyTradingHub</div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="support.html">Support</a>
+      <a href="faq.html">FAQs</a>
+    </nav>
+  </header>
 
-<h1>Signup to MyTradingHub</h1>
-<div class="form-container">
-  <form id="signupForm">
-    <input type="email" id="email" placeholder="Email Address" required>
-    <input type="text" id="mobile" placeholder="Mobile Number" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-    <div class="otp-box" id="otpDisplay"></div>
-    <input type="text" id="otp" placeholder="Enter OTP" required>
-    <button type="submit">Verify & Submit</button>
-    <div class="error" id="errorMsg"></div>
-  </form>
-</div>
+  <div class="signup-container">
+    <h2>Create Account</h2>
+    <form>
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" placeholder="Enter your full name" required />
 
-<script>
-  let generatedOtp = '';
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
 
-  function generateOtp() {
-    generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    document.getElementById('otpDisplay').textContent = 'Your OTP: ' + generatedOtp;
-  }
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Create a password" required />
 
-  generateOtp();
-
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const mobile = document.getElementById('mobile').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const confirmPassword = document.getElementById('confirmPassword').value.trim();
-    const otpInput = document.getElementById('otp').value.trim();
-    const errorBox = document.getElementById('errorMsg');
-    errorBox.textContent = '';
-
-    if (!email.includes('@') || !email.includes('.')) {
-      errorBox.textContent = 'Please enter a valid email.';
-      return;
-    }
-    if (password !== confirmPassword) {
-      errorBox.textContent = 'Passwords do not match.';
-      return;
-    }
-    if (otpInput !== generatedOtp) {
-      errorBox.textContent = 'Invalid OTP.';
-      return;
-    }
-
-    alert('Signup successful! You can now login.');
-    location.href = 'login.html';
-  });
-</script>
-
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 4a5b4410efafbb0e20d38ed5a85dd74f1b78bb9b
