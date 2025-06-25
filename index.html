@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MyTradingHub - Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -25,6 +25,8 @@
       justify-content: space-between;
       align-items: center;
       background-color: rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
     }
     .logo {
       font-size: 24px;
@@ -40,6 +42,7 @@
       color: #0077ff;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      min-width: 160px;
     }
     .menu a {
       padding: 10px 20px;
@@ -53,6 +56,7 @@
     .hamburger {
       cursor: pointer;
       font-size: 28px;
+      user-select: none;
     }
     main {
       flex: 1;
@@ -61,7 +65,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 40px 20px;
+      padding: 40px 20px 80px;
     }
     h1 {
       font-size: 36px;
@@ -70,11 +74,13 @@
     p {
       font-size: 18px;
       margin-bottom: 40px;
+      max-width: 450px;
     }
     .btn-group {
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
+      margin-bottom: 40px;
     }
     .btn {
       background-color: white;
@@ -88,10 +94,48 @@
     .btn:hover {
       background-color: #f0f0f0;
     }
+    /* Currency table */
+    #currencyTable {
+      width: 320px;
+      max-width: 90vw;
+      background: rgba(255 255 255 / 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      user-select: none;
+    }
+    #currencyTable thead {
+      background: rgba(255 255 255 / 0.25);
+      font-weight: 700;
+      font-size: 16px;
+    }
+    #currencyTable th,
+    #currencyTable td {
+      padding: 12px 15px;
+      text-align: center;
+    }
+    #currencyTable tbody tr:nth-child(even) {
+      background: rgba(255 255 255 / 0.1);
+    }
+    #currencyTable tbody tr:hover {
+      background: rgba(255 255 255 / 0.3);
+      cursor: default;
+    }
+    .price-up {
+      color: #0f0;
+      font-weight: 700;
+    }
+    .price-down {
+      color: #f33;
+      font-weight: 700;
+    }
     @media (max-width: 768px) {
       .btn-group {
         flex-direction: column;
         gap: 15px;
+      }
+      #currencyTable {
+        width: 100%;
       }
     }
   </style>
@@ -108,12 +152,12 @@
 <header>
   <div class="logo">MyTradingHub</div>
   <div class="hamburger" onclick="toggleMenu()">☰</div>
-  <div class="menu" id="dropdownMenu">
+  <nav class="menu" id="dropdownMenu">
     <a href="#">Contact Us</a>
     <a href="#">Customer Support</a>
     <a href="#">FAQs</a>
     <a href="#">About Us</a>
-  </div>
+  </nav>
 </header>
 
 <main>
@@ -124,6 +168,18 @@
     <a href="#" class="btn">Open Account</a>
     <a href="#" class="btn">Contact Us</a>
   </div>
+
+  <table id="currencyTable" aria-label="Live Currency Pairs">
+    <thead>
+      <tr>
+        <th>Pair</th>
+        <th>Price (USD)</th>
+      </tr>
+    </thead>
+    <tbody id="currencyBody">
+      <!-- Dynamic rows here -->
+    </tbody>
+  </table>
 </main>
 
 <script>
@@ -131,6 +187,42 @@
     const menu = document.getElementById('dropdownMenu');
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
   }
+
+  const pairs = ['EUR/USD', 'USD/JPY', 'GBP/USD', 'AUD/USD', 'USD/CAD', 'USD/CHF', 'NZD/USD'];
+  const tbody = document.getElementById('currencyBody');
+  const apiKey = 'YOUR_TWELVEDATA_API_KEY'; // <-- Replace with your TwelveData API key
+
+  function fetchPrices() {
+    pairs.forEach(pair => {
+      const symbol = pair.replace('/', '');
+      fetch(`https://api.twelvedata.com/price?symbol=${symbol}&apikey=${apiKey}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.price) {
+            const priceNum = parseFloat(data.price).toFixed(5);
+            let row = document.getElementById(`row-${symbol}`);
+            if (!row) {
+              row = document.createElement('tr');
+              row.id = `row-${symbol}`;
+              row.innerHTML = `
+                <td>${pair}</td>
+                <td class="price">${priceNum}</td>
+              `;
+              tbody.appendChild(row);
+            } else {
+              row.querySelector('.price').textContent = priceNum;
+            }
+          }
+        })
+        .catch(() => {
+          // Handle errors silently
+        });
+    });
+  }
+
+  // Initial fetch and every 10 seconds update
+  fetchPrices();
+  setInterval(fetchPrices, 10000);
 </script>
 
 </body>
