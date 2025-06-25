@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyTradingHub - Dashboard</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -33,12 +33,11 @@
       right: 0;
       left: auto;
     }
-    .trade-panel, .position-panel {
+    .trade-panel {
       background: white;
       border-radius: 8px;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
     }
     .chart-container {
       background: white;
@@ -50,17 +49,9 @@
     .list-group-item {
       cursor: pointer;
     }
-    table th, table td {
-      font-size: 14px;
-      vertical-align: middle;
-    }
-    .profit-positive { color: green; font-weight: bold; }
-    .profit-negative { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
-
-  <!-- Sidebar with currency pairs -->
   <div class="sidebar p-3">
     <h5>Forex Pairs</h5>
     <ul class="list-group" id="pairList">
@@ -75,158 +66,76 @@
     </ul>
   </div>
 
-  <!-- Main content area -->
   <div class="main-content">
     <div class="d-flex justify-content-end">
       <div class="dropdown account-dropdown">
-        <button class="btn btn-primary dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          Loading... | $<span id="userBalance">0.00</span>
+        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" id="userDropdown" aria-expanded="false">
+          Loading...
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="deposit.html">Deposit</a></li>
-          <li><a class="dropdown-item" href="withdrawal.html">Withdrawal</a></li>
-          <li><a class="dropdown-item" href="wallet.html">Wallet</a></li>
-          <li><a class="dropdown-item" href="verify.html">Real Name Verification</a></li>
-          <li><a class="dropdown-item" href="invite.html">Invite Friends</a></li>
-          <li><a class="dropdown-item" href="changepassword.html">Change Password</a></li>
-          <li><a class="dropdown-item" href="announcement.html">Announcement</a></li>
-          <li><a class="dropdown-item" href="support.html">Online Service</a></li>
+          <li><a class="dropdown-item" href="#">Deposit</a></li>
+          <li><a class="dropdown-item" href="#">Withdrawal</a></li>
+          <li><a class="dropdown-item" href="#">Wallet</a></li>
+          <li><a class="dropdown-item" href="#">Real Name Verification</a></li>
+          <li><a class="dropdown-item" href="#">Invite Friends</a></li>
+          <li><a class="dropdown-item" href="#">Change Password</a></li>
+          <li><a class="dropdown-item" href="#">Announcement</a></li>
+          <li><a class="dropdown-item" href="#">Online Service</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="index.html">Logout</a></li>
+          <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
         </ul>
       </div>
     </div>
 
-    <!-- Chart Area -->
     <div class="chart-container">
-      <iframe id="chartFrame" src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAUUSD&locale=en" width="100%" height="400" frameborder="0" allowtransparency="true"></iframe>
+      <iframe id="chartFrame" src="https://www.tradingview.com/chart/?symbol=OANDA:XAUUSD" width="100%" height="400" frameborder="0"></iframe>
     </div>
 
-    <!-- Trade panel -->
     <div class="trade-panel">
       <h5 id="pairTitle">XAUUSD</h5>
-      <form id="tradeForm">
+      <p><strong>Market Price:</strong> <span id="marketPrice">3329.04</span></p>
+      <form>
         <div class="row g-3">
           <div class="col-md-3">
             <label>Multiplier</label>
-            <input type="number" class="form-control" id="multiplier" value="100">
+            <input type="number" class="form-control" value="100">
           </div>
           <div class="col-md-3">
             <label>Set Loss</label>
-            <input type="number" class="form-control" id="loss" value="0">
+            <input type="number" class="form-control" value="0">
           </div>
           <div class="col-md-3">
             <label>Take Profit</label>
-            <input type="number" class="form-control" id="profit" value="0">
+            <input type="number" class="form-control" value="0">
           </div>
           <div class="col-md-3">
-            <label>Lots</label>
-            <input type="number" class="form-control" id="lots" value="1" step="0.01">
+            <label>Lots (Step: 0.01)</label>
+            <input type="number" class="form-control" value="1">
           </div>
         </div>
         <div class="mt-3 d-flex justify-content-between">
-          <button class="btn btn-success w-25" type="button" onclick="openTrade('Buy')">Buy</button>
-          <button class="btn btn-danger w-25" type="button" onclick="openTrade('Sell')">Sell</button>
+          <button class="btn btn-success w-25">Buy</button>
+          <button class="btn btn-danger w-25">Sell</button>
         </div>
       </form>
-    </div>
-
-    <!-- Position Table -->
-    <div class="position-panel">
-      <h5>Open Positions</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="table-light">
-            <tr>
-              <th>Transaction Pair</th>
-              <th>Reservation #</th>
-              <th>Direction</th>
-              <th>Lots</th>
-              <th>Entry Price</th>
-              <th>Current Price</th>
-              <th>Profit</th>
-              <th>Open Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="tradeTableBody"></tbody>
-        </table>
-      </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let currentSymbol = "OANDA:XAUUSD";
-    let trades = JSON.parse(localStorage.getItem("openTrades") || "[]");
-
-    function updateProfits() {
-      trades.forEach((trade, i) => {
-        const price = Math.random() * 100 + 3000;
-        const profit = (trade.direction === 'Buy' ? (price - trade.entry) : (trade.entry - price)) * trade.lots * 10;
-        trades[i].profit = profit.toFixed(2);
-        trades[i].current = price.toFixed(2);
-      });
-      localStorage.setItem("openTrades", JSON.stringify(trades));
-      loadTrades();
-    }
-
-    function loadTrades() {
-      const tbody = document.getElementById("tradeTableBody");
-      tbody.innerHTML = "";
-      trades.forEach(t => {
-        const row = `<tr>
-          <td>${t.pair}</td>
-          <td>#${t.id}</td>
-          <td>${t.direction}</td>
-          <td>${t.lots}</td>
-          <td>${t.entry}</td>
-          <td>${t.current || t.entry}</td>
-          <td class='${t.profit >= 0 ? "profit-positive" : "profit-negative"}'>$${t.profit}</td>
-          <td>${t.time}</td>
-          <td><button class='btn btn-sm btn-danger' onclick='closeTrade(${t.id})'>Close</button></td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    function openTrade(type) {
-      const lots = parseFloat(document.getElementById("lots").value);
-      const price = Math.random() * 100 + 3000;
-      const id = Math.floor(Math.random() * 90000 + 10000);
-      const now = new Date().toLocaleString();
-      trades.push({
-        id,
-        pair: document.getElementById("pairTitle").innerText,
-        direction: type,
-        lots,
-        entry: price.toFixed(2),
-        profit: "0.00",
-        time: now
-      });
-      localStorage.setItem("openTrades", JSON.stringify(trades));
-      updateProfits();
-    }
-
-    function closeTrade(id) {
-      trades = trades.filter(t => t.id !== id);
-      localStorage.setItem("openTrades", JSON.stringify(trades));
-      loadTrades();
-    }
-
     $(document).ready(function() {
       const email = localStorage.getItem("userEmail") || "guest@trade.com";
-      const balance = localStorage.getItem("userBalance") || "0.00";
-      $('#userDropdown').html(`${email} | $<span id='userBalance'>${balance}</span>`);
+      let balances = JSON.parse(localStorage.getItem("userBalances") || "{}");
+      let balance = balances[email] || 0;
+      $('#userDropdown').html(`${email} | $<span id='userBalance'>${balance.toFixed(2)}</span>`);
 
       $('#pairList li').on('click', function() {
-        currentSymbol = $(this).data('symbol');
-        $('#chartFrame').attr('src', `https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${currentSymbol}&locale=en`);
-        $('#pairTitle').text($(this).text());
+        const symbol = $(this).data('symbol');
+        const pair = $(this).text();
+        $('#chartFrame').attr('src', `https://www.tradingview.com/chart/?symbol=${symbol}`);
+        $('#pairTitle').text(pair);
+        $('#marketPrice').text('Loading...');
       });
-
-      loadTrades();
-      setInterval(updateProfits, 3000);
     });
   </script>
 </body>
