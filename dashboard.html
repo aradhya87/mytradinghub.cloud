@@ -95,7 +95,7 @@
     </div>
 
     <div class="chart-container">
-      <iframe id="chartFrame" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_c1&symbol=OANDA:XAUUSD&interval=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=Light&style=1&timezone=Asia%2FCalcutta&withdateranges=1&hideideas=1&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en&utm_source="> </iframe>
+      <iframe id="chartFrame" src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=1&theme=Light&style=1" width="100%" height="400" frameborder="0"></iframe>
     </div>
 
     <div class="trade-panel">
@@ -134,13 +134,20 @@
   <script>
     $(document).ready(function() {
       const email = localStorage.getItem("userEmail") || "guest@trade.com";
+      const isAdmin = email === "admin@mytradinghub.cloud";
 
-      if(email === "admin@mytradinghub.cloud") {
-        let balances = JSON.parse(localStorage.getItem("userBalances") || "{}");
-        let balance = balances[email] || 0;
-        $('#userDropdown').html(`${email} | $<span id='userBalance'>${balance.toFixed(2)}</span>`);
+      let balances = JSON.parse(localStorage.getItem("userBalances") || "{}");
+      if (!balances[email]) balances[email] = 0;
+      if (isAdmin) {
+        $('#userDropdown').html(`${email} | $<span id='userBalance'>${balances[email].toFixed(2)}</span>`);
       } else {
         $('#userDropdown').html(`${email}`);
+      }
+
+      // Load previous trades
+      const trades = JSON.parse(localStorage.getItem("userTrades") || "[]");
+      for (let t of trades.reverse()) {
+        $('#tradeStatus').append(`<p><strong>${t.type.toUpperCase()}</strong> | Lots: ${t.lots} | Entry: ${t.price.toFixed(2)} | Margin: $${t.margin.toFixed(2)} | P/L: $${t.result} | Time: ${t.time}</p>`);
       }
 
       $('#pairList li').on('click', function() {
@@ -157,13 +164,23 @@
       const multiplier = parseFloat(document.getElementById('multiplier').value) || 100;
       const margin = lots * multiplier;
       const entryPrice = Math.random() * (3330 - 3310) + 3310;
-      const result = (Math.random() * 10 - 5).toFixed(2); // simulate profit/loss
+      const result = (Math.random() * 10 - 5).toFixed(2); // simulate P/L
 
+      const email = localStorage.getItem("userEmail") || "guest@trade.com";
+      let balances = JSON.parse(localStorage.getItem("userBalances") || "{}")
+      if (!balances[email]) balances[email] = 0;
+      balances[email] += parseFloat(result);
+      localStorage.setItem("userBalances", JSON.stringify(balances));
+
+      let trades = JSON.parse(localStorage.getItem("userTrades") || "[]")
       const now = new Date().toLocaleString();
-      const html = `<p><strong>Trade:</strong> ${type.toUpperCase()} | Lots: ${lots} | Entry: ${entryPrice.toFixed(2)} | Margin: $${margin.toFixed(2)} | P/L: $${result} | Time: ${now}</p>`;
+      const tradeData = { type, lots, margin, price: entryPrice, result, time: now };
+      trades.push(tradeData);
+      localStorage.setItem("userTrades", JSON.stringify(trades));
 
-      const box = document.getElementById("tradeStatus");
-      box.innerHTML = html + box.innerHTML;
+      const html = `<p><strong>${type.toUpperCase()}</strong> | Lots: ${lots} | Entry: ${entryPrice.toFixed(2)} | Margin: $${margin.toFixed(2)} | P/L: $${result} | Time: ${now}</p>`;
+      $('#tradeStatus').prepend(html);
+      $('#userBalance').text(balances[email].toFixed(2));
     }
   </script>
 </body>
