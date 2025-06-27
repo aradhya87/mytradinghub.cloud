@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - MyTradingHub</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f9ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    form {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgb(0 85 255 / 0.2);
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #0055ff;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #003bb5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login form -->
+  <form id="loginForm">
+    <h2>Login</h2>
+    <input id="email" type="email" required placeholder="Email" />
+    <input id="password" type="password" required placeholder="Password" />
+    <button type="submit">Log In</button>
+  </form>
+
+  <!-- Link your login.js script -->
+  <script src="js/login.js"></script>
+</body>
+</html>

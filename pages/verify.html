@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Real Name Verification - MyTradingHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f0f4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 85, 255, 0.2);
+      width: 90%;
+      max-width: 850px;
+    }
+    h2 {
+      text-align: center;
+      color: #003bb5;
+    }
+    form {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .column {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      background: #0055ff;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003bb5;
+    }
+    .status-box {
+      margin-top: 30px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+    }
+    .status-box.inprogress {
+      color: #ff9900;
+    }
+    .status-box.certified {
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Real Name Verification</h2>
+    <form id="kycForm" enctype="multipart/form-data">
+      <div class="column">
+        <label for="idNumber">ID Number</label>
+        <input type="text" id="idNumber" name="idNumber" required />
+      </div>
+      <div class="column">
+        <label for="frontId">Front of ID</label>
+        <input type="file" id="frontId" name="frontId" accept="image/*,.pdf" required />
+      </div>
+      <div class="column">
+        <label for="backId">Back of ID</label>
+        <input type="file" id="backId" name="backId" accept="image/*,.pdf" required />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div class="status-box" id="kycStatusBox"></div>
+  </div>
+
+  <script>
+    const userEmail = localStorage.getItem('userEmail') || ''
+
+    async function checkKYCStatus() {
+      const res = await fetch(`http://localhost:5000/kyc-status?email=${userEmail}`)
+      const data = await res.json()
+
+      if (data.status === 'pending') {
+        document.getElementById('kycForm').style.display = 'none'
+        document.getElementById('kycStatusBox').textContent = '⏳ Verification In Progress'
+        document.getElementById('kycStatusBox').classList.add('inprogress')
+      } else if (data.status === 'approved') {
+        document.getElementById('kycForm').style.display = 'none'
+        document.getElementById('kycStatusBox').textContent = '✅ Your Account is Certified'
+        document.getElementById('kycStatusBox').classList.add('certified')
+      }
+    }
+
+    checkKYCStatus()
+
+    document.getElementById('kycForm').addEventListener('submit', async function (e) {
+      e.preventDefault()
+      const formData = new FormData()
+      formData.append('email', userEmail)
+      formData.append('idNumber', document.getElementById('idNumber').value)
+      formData.append('frontId', document.getElementById('frontId').files[0])
+      formData.append('backId', document.getElementById('backId').files[0])
+
+      const res = await fetch('http://localhost:5000/upload-kyc', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert('KYC submitted successfully. Redirecting...')
+        window.location.href = 'user-dashboard.html'
+      } else {
+        alert(data.error || 'Something went wrong')
+      }
+    })
+  </script>
+
+</body>
+</html>

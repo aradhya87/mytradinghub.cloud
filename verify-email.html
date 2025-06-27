@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Email Verification - MyTradingHub</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f9ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgb(0 85 255 / 0.2);
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #0055ff;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #003bb5;
+    }
+    .message {
+      color: #28a745;
+      font-weight: 600;
+      text-align: center;
+    }
+    .error {
+      color: #dc3545;
+      font-weight: 600;
+      text-align: center;
+    }
+    .resend {
+      background: transparent;
+      border: none;
+      color: #0055ff;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 0.9rem;
+      padding: 0;
+      margin-top: -10px;
+      align-self: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Email Verification</h2>
+    <input id="email" type="email" placeholder="Enter your email" required />
+    <input id="otp" type="text" placeholder="Enter OTP" required />
+    <button id="verifyBtn">Verify OTP</button>
+    <button class="resend" id="resendBtn">Resend OTP</button>
+
+    <div id="statusMsg"></div>
+  </div>
+
+  <script>
+    const verifyBtn = document.getElementById('verifyBtn')
+    const resendBtn = document.getElementById('resendBtn')
+    const statusMsg = document.getElementById('statusMsg')
+
+    verifyBtn.addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim()
+      const otp = document.getElementById('otp').value.trim()
+      if (!email || !otp) {
+        statusMsg.textContent = 'Please fill both fields'
+        statusMsg.className = 'error'
+        return
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/verify-otp', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ email, otp })
+        })
+        const data = await res.json()
+        if (res.ok) {
+          statusMsg.textContent = 'Verification successful! Redirecting...'
+          statusMsg.className = 'message'
+          setTimeout(() => {
+            window.location.href = 'login.html'
+          }, 2000)
+        } else {
+          statusMsg.textContent = data.error || 'Invalid OTP'
+          statusMsg.className = 'error'
+        }
+      } catch {
+        statusMsg.textContent = 'Server error, try again later'
+        statusMsg.className = 'error'
+      }
+    })
+
+    resendBtn.addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim()
+      if (!email) {
+        statusMsg.textContent = 'Please enter your email to resend OTP'
+        statusMsg.className = 'error'
+        return
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/resend-otp', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ email })
+        })
+        const data = await res.json()
+        if (res.ok) {
+          statusMsg.textContent = 'OTP resent! Please check your email.'
+          statusMsg.className = 'message'
+        } else {
+          statusMsg.textContent = data.error || 'Failed to resend OTP'
+          statusMsg.className = 'error'
+        }
+      } catch {
+        statusMsg.textContent = 'Server error, try again later'
+        statusMsg.className = 'error'
+      }
+    })
+  </script>
+
+</body>
+</html>
