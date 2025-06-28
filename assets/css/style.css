@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to MyTradingHub</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">MyTradingHub</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="dashboard.html">Trade</a>
+      <a href="profile.html">Account</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Trade Smarter with MyTradingHub</h1>
+    <p>Secure. Real-time. Profitable.</p>
+    <a href="login.html" class="btn-primary">Get Started</a>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h2>Live Trading</h2>
+      <p>Get access to real-time currency charts and execute trades instantly.</p>
+    </div>
+    <div class="feature">
+      <h2>Account Safety</h2>
+      <p>Industry-grade encryption and user verification ensures full security.</p>
+    </div>
+    <div class="feature">
+      <h2>Profit Tracking</h2>
+      <p>Track your trade history and monitor profit/loss with our smart dashboard.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 MyTradingHub. All rights reserved.</p>
+  </footer>
+</body>
+</html>

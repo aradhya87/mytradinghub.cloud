@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trade History - Forex Flock Ltd</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Trade History</h1>
+    <nav>
+      <a href="trade.html">Trade</a>
+      <a href="history.html">History</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="history-section">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Pair</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Price</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="history-table">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const example = [
+      { date: '2025-06-28 09:15', pair: 'EURUSD', type: 'Buy', amount: 1000, price: 1.0923, status: 'Closed' },
+      { date: '2025-06-27 14:22', pair: 'USDJPY', type: 'Sell', amount: 2000, price: 144.56, status: 'Open' }
+    ];
+    const tbody = document.getElementById('history-table');
+    example.forEach(t => {
+      const row = document.createElement('tr');
+      Object.values(t).forEach(v => {
+        const td = document.createElement('td');
+        td.textContent = v;
+        row.appendChild(td);
+      });
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>

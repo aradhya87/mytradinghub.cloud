@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyTradingHub - Your Path to Financial Success</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #002f6c;
+      --accent-color: #f6b024;
+      --light-bg: #f9f9f9;
+      --dark-text: #071C3C;
+      --muted-text: #6c757d;
+      --button-hover: #d99b12;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--dark-text);
+    }
+    header {
+      background: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo img {
+      height: 40px;
+    }
+    nav a {
+      color: white;
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      color: var(--accent-color);
+    }
+    .hero {
+      background: linear-gradient(to right, #071C3C, #0052cc);
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+    }
+    .hero .btn-primary {
+      background: var(--accent-color);
+      color: var(--primary-color);
+      padding: 12px 28px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .hero .btn-primary:hover {
+      background: var(--button-hover);
+    }
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      margin: 60px 0 30px;
+      color: var(--primary-color);
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .grid-item {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      flex: 1 1 220px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .newsletter {
+      background: var(--primary-color);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .newsletter input {
+      padding: 10px;
+      width: 280px;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+    }
+    .newsletter button {
+      padding: 10px 20px;
+      background: var(--accent-color);
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    footer {
+      background: #222;
+      color: #ccc;
+      padding: 30px 20px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="assets/images/logo.png" alt="MyTradingHub Logo" />
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign Up</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to MyTradingHub</h1>
+    <p>Start Trading and Get $10 Welcome Bonus on First Deposit</p>
+    <a href="signup.html" class="btn-primary">Open Account</a>
+  </section>
+
+  <section class="live-prices">
+    <h2 class="section-title">Live Forex Prices</h2>
+    <div class="grid">
+      <div class="grid-item"><h4>EUR/USD</h4><p>$1.09</p></div>
+      <div class="grid-item"><h4>GBP/USD</h4><p>$1.27</p></div>
+      <div class="grid-item"><h4>USD/JPY</h4><p>¥157.89</p></div>
+      <div class="grid-item"><h4>AUD/USD</h4><p>$0.66</p></div>
+    </div>
+  </section>
+
+  <section class="why-us">
+    <h2 class="section-title">Why Choose MyTradingHub?</h2>
+    <div class="grid">
+      <div class="grid-item">24/7 Support</div>
+      <div class="grid-item">Trusted by Experts</div>
+      <div class="grid-item">Secure Transactions</div>
+      <div class="grid-item">Live Market Data</div>
+    </div>
+  </section>
+
+  <section class="how-to">
+    <h2 class="section-title">How to Start?</h2>
+    <div class="grid">
+      <div class="grid-item">1. Sign Up</div>
+      <div class="grid-item">2. Verify Account</div>
+      <div class="grid-item">3. Deposit Funds</div>
+      <div class="grid-item">4. Start Trading</div>
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <h3>Subscribe for Updates</h3>
+    <form>
+      <input type="email" placeholder="Enter your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 MyTradingHub. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

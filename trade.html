@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trade - Forex Flock Ltd</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Trade</h1>
+    <nav>
+      <a href="trade.html">Trade</a>
+      <a href="history.html">History</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="trade-section">
+      <h2>Open a New Trade</h2>
+      <form id="trade-form">
+        <label>
+          Pair:
+          <select name="pair">
+            <option value="EURUSD">EUR/USD</option>
+            <option value="USDJPY">USD/JPY</option>
+            <!-- Add more dynamically -->
+          </select>
+        </label>
+        <label>
+          Amount:
+          <input type="number" name="amount" min="0" step="0.01" required />
+        </label>
+        <label>
+          Action:
+          <select name="side">
+            <option value="buy">Buy</option>
+            <option value="sell">Sell</option>
+          </select>
+        </label>
+        <button type="submit">Execute Trade</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('trade-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      console.log('Submitting trade:', Object.fromEntries(data));
+      // TODO: send via fetch/AJAX
+    });
+  </script>
+</body>
+</html>
+
